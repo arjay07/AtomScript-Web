@@ -29,6 +29,23 @@ function onLoad(){
 		//console.log(code);
 		eval(code + "if(main){ if(AtomScript.startConsole)Console.start(); main(); }");
 	
+	}else if(AtomScript.src != null && AtomScript.src.startsWith("#")){
+
+		var id = AtomScript.src.substring(1, AtomScript.src.length);
+		var script = document.getElementById(id);
+		
+		if(script.getAttribute("type") == "AtomScript"){
+
+			code = script.innerHTML;
+			parseCode();
+			eval(code + "if(main){ if(AtomScript.startConsole)Console.start(); main(); }");
+
+		}else{
+
+			console.log("%cMake sure the type of you script tag is 'AtomScript'...", "color: #f00;");
+
+		}
+
 	}
 
 }
@@ -168,6 +185,28 @@ if (!String.prototype.endsWith) {
       position -= searchString.length;
       var lastIndex = subjectString.indexOf(searchString, position);
       return lastIndex !== -1 && lastIndex === position;
+    }
+  });
+}
+
+if (!String.prototype.startsWith) {
+  Object.defineProperty(String.prototype, 'startsWith', {
+    enumerable: false,
+    configurable: false,
+    writable: false,
+    value: function(searchString, position) {
+      position = position || 0;
+      return this.lastIndexOf(searchString, position) === position;
+    }
+  });
+}if (!String.prototype.startsWith) {
+  Object.defineProperty(String.prototype, 'startsWith', {
+    enumerable: false,
+    configurable: false,
+    writable: false,
+    value: function(searchString, position) {
+      position = position || 0;
+      return this.lastIndexOf(searchString, position) === position;
     }
   });
 }
