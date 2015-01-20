@@ -12,4 +12,33 @@
  *		AtomScript is an interpreted programming language. The language is translated into JavaScript.
  * 
  */
-eval(function(p,a,c,k,e,d){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--){d[e(c)]=k[c]||e(c)}k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1};while(c--){if(k[c]){p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c])}}return p}('w.1r=16;2 8={v:a,X:[],19:J,1b:"8/1m/D.1n",15:J};2 6={};2 4="";3 16(){7(8.v!=a&&8.v.q(".Q")){M(8.v);18();N(4+"7(D){ 7(8.15)6.1j(); D(); }")}}3 18(){1c();7(8.19)13();Y();11();1a();1l();1g();Z()}3 13(){4=4.d(/[\\n\\t\\r]/g,"")}3 Z(){4=4.d(/#[^;]+;/g,"")}3 Y(){2 5=4.b(/@[^; ]+/g);7(5!=a)m(2 i=0;i<5.c;i++){4=4.d(5[i].y(0,1),"2 ")}}3 11(){2 5=4.b(/\\$[^; ]+/g);7(5!=a)m(2 i=0;i<5.c;i++){4=4.d(5[i].y(0,1),"3 ")}}3 1a(){2 5=4.b(/\\*[^;0-9 ]+/g);7(5!=a)m(2 i=0;i<5.c;i++){4=4.d(5[i].y(0,1),"U ")}}3 1l(){4=4.d(/k ->|k->|k-> |k -> /g,"k.")}3 1g(){2 5=4.b(/::/g);7(5!=a)m(2 i=0;i<5.c;i++){4=4.d(5[i],".")}}3 1c(){2 5=4.b(/X[^;]+;/g);7(5!=a)m(2 i=0;i<5.c;i++){2 b=5[i];2 h=N(b.1q(" ")[1]);7(h.q(".Q")){2 W=F(h);4=4.d(b,W)}}}3 F(h){2 o=U 1p();o.1i("1s",h,J);o.1t(a);2 1h=o.1o;e 1h}3 M(h){4=F(h)}7(!K.O.q){1A.1W(K.O,\'q\',{p:3(I,j){2 s=k.1V();7(j===1O||j>s.c){j=s.c}j-=I.c;2 B=s.1N(I,j);e B!==-1&&B===j}})}2 x=l;2 C=w;3 1R(f){2 i=l.u("H");i.V="1S";i.p=f;i.1Q=3(R){i.L("1u",R)};e i}3 1P(){2 i=l.u("H");i.V="f";i.1T=3(P){i.L("1U",P)};i.T=3(t){i.p=t}i.1f=3(){e i.p}e i}3 1d(f){2 i=l.u("1Y");i.1e=f;i.T=3(t){i.1X=t}i.1f=3(){e i.1e}e i}3 1Z(){2 i=x.u("1L");e i}3 12(A,z){7(z==a)x.1M.1k(A);1B z.1k(A)}6.1j=3(){6.C=w.1i(8.1b,"1z","1y=1v,1w=1x,1C=G,1D=G,1J=G");6.E=6.C.l;6.1K=6.E.17("H");6.S=6.E.17("14");6.10("1I 1H 1E 8 6!")}6.10=3(t){2 f=1d(t);f.1F.14="1G";12(f,6.S)}',62,124,'||var|function|code|matches|Console|if|AtomScript||null|match|length|replace|return|text||file||position|this|document|for||request|value|endsWith||subjectString||createElement|src|window|Doc|substring|parent|element|lastIndex|Window|main|Document|readFile|no|input|searchString|false|String|addEventListener|setScript|eval|prototype|onpress|atom|onclick|displayElement|setText|new|type|read|include|convertVariables|removeComments|out|convertMethods|append|formatCode|display|startConsole|onLoad|getElementById|parseCode|FORMAT|convertObjects|consolePath|includeFiles|createText|innerText|getText|convertNameSpaceSplitters|returnValue|open|start|appendChild|convertObjectProperties|console|html|responseText|XMLHttpRequest|split|onload|GET|send|click|650|height|440|width|AtomScriptConsole|Object|else|menubar|statusbar|the|style|block|to|Welcome|location|inputElement|div|body|indexOf|undefined|createTextInput|onClick|createButton|button|onKeyPress|keydown|toString|defineProperty|innerHTML|span|createDiv'.split('|'),0,{}))
+window.onload=onLoad;var AtomScript={src:null,include:[],FORMAT:false,consolePath:"AtomScript/console/main.html",startConsole:false};var Console={};var code="";function onLoad(){if(AtomScript.src!=null&&AtomScript.src.endsWith(".atom")){setScript(AtomScript.src);parseCode();eval(code+"if(main){ if(AtomScript.startConsole)Console.start(); main(); }");}}
+function parseCode(){includeFiles();if(AtomScript.FORMAT)formatCode();convertVariables();convertMethods();convertObjects();convertObjectProperties();convertNameSpaceSplitters();removeComments();}
+function formatCode(){code=code.replace(/[\n\t\r]/g,"");}
+function removeComments(){code=code.replace(/#[^;]+;/g,"");}
+function convertVariables(){var matches=code.match(/@[^; ]+/g);if(matches!=null)
+for(var i=0;i<matches.length;i++){code=code.replace(matches[i].substring(0,1),"var ");}}
+function convertMethods(){var matches=code.match(/\$[^; ]+/g);if(matches!=null)
+for(var i=0;i<matches.length;i++){code=code.replace(matches[i].substring(0,1),"function ");}}
+function convertObjects(){var matches=code.match(/\*[^;0-9 ]+/g);if(matches!=null)
+for(var i=0;i<matches.length;i++){code=code.replace(matches[i].substring(0,1),"new ");}}
+function convertObjectProperties(){code=code.replace(/this ->|this->|this-> |this -> /g,"this.");}
+function convertNameSpaceSplitters(){var matches=code.match(/::/g);if(matches!=null)
+for(var i=0;i<matches.length;i++){code=code.replace(matches[i],".");}}
+function includeFiles(){var matches=code.match(/include[^;]+;/g);if(matches!=null)
+for(var i=0;i<matches.length;i++){var match=matches[i];var file=eval(match.split(" ")[1]);if(file.endsWith(".atom")){var read=readFile(file);code=code.replace(match,read);}}}
+function readFile(file){var request=new XMLHttpRequest();request.open("GET",file,false);request.send(null);var returnValue=request.responseText;return returnValue;}
+function setScript(file){code=readFile(file);}
+if(!String.prototype.endsWith){Object.defineProperty(String.prototype,'endsWith',{value:function(searchString,position){var subjectString=this.toString();if(position===undefined||position>subjectString.length){position=subjectString.length;}
+position-=searchString.length;var lastIndex=subjectString.indexOf(searchString,position);return lastIndex!==-1&&lastIndex===position;}});}
+var Doc=document;var Window=window;function createButton(text){var i=document.createElement("input");i.type="button";i.value=text;i.onClick=function(onclick){i.addEventListener("click",onclick);};return i;}
+function createTextInput(){var i=document.createElement("input");i.type="text";i.onKeyPress=function(onpress){i.addEventListener("keydown",onpress);};i.setText=function(t){i.value=t;}
+i.getText=function(){return i.value;}
+return i;}
+function createText(text){var i=document.createElement("span");i.innerText=text;i.setText=function(t){i.innerHTML=t;}
+i.getText=function(){return i.innerText;}
+return i;}
+function createDiv(){var i=Doc.createElement("div");return i;}
+function append(element,parent){if(parent==null)Doc.body.appendChild(element);else parent.appendChild(element);}
+Console.start=function(){Console.Window=window.open(AtomScript.consolePath,"AtomScriptConsole","width=650,height=440,menubar=no,statusbar=no,location=no");Console.Document=Console.Window.document;Console.inputElement=Console.Document.getElementById("input");Console.displayElement=Console.Document.getElementById("display");Console.out("Welcome to the AtomScript Console!");}
+Console.out=function(t){var text=createText(t);text.style.display="block";append(text,Console.displayElement);}
