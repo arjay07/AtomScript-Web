@@ -301,6 +301,16 @@ function append(element, parent){
 
 }
 
+function get(id){
+	
+	if(id.startsWith("#")){
+		
+		return document.getElementById(id.substring(1, id.length));
+		
+	}
+	
+}
+
 /***
  *              _                   _____           _       _   
  *         /\  | |                 / ____|         (_)     | |  
