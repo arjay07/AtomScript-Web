@@ -22,6 +22,9 @@ var code = "";
 
 function onLoad(){
 
+	console.log("%cAtomScript v0.5", "color: #0355ff; font-family: arial;");
+	console.log("%c©ZeroSeven Interactive 2015", "color: #ff0330; font-family: arial;");
+
 	if(AtomScript.src != null && AtomScript.src.endsWith(".atom")){
 	
 		setScript(AtomScript.src);
@@ -42,7 +45,7 @@ function onLoad(){
 
 		}else{
 
-			console.log("%cMake sure the type of you script tag is 'AtomScript'...", "color: #f00;");
+			console.log("%cMake sure the type of your script tag is 'AtomScript'...", "color: #f00;");
 
 		}
 
