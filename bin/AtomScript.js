@@ -15,12 +15,12 @@
 window.onload=onLoad;var AtomScript={src:null,include:[],FORMAT:false,consolePath:"AtomScript/console/main.html",startConsole:false};var Console={};var code="";function onLoad(){console.log("%cAtomScript v0.5","color: #0355ff; font-family: arial;");console.log("%c©ZeroSeven Interactive 2015","color: #ff0330; font-family: arial;");if(AtomScript.src!=null&&AtomScript.src.endsWith(".atom")){setScript(AtomScript.src);parseCode();eval(code+"if(main){ if(AtomScript.startConsole)Console.start(); main(); }");}else if(AtomScript.src!=null&&AtomScript.src.startsWith("#")){var id=AtomScript.src.substring(1,AtomScript.src.length);var script=document.getElementById(id);if(script.getAttribute("type")=="AtomScript"){code=script.innerHTML;parseCode();eval(code+"if(main){ if(AtomScript.startConsole)Console.start(); main(); }");}else{console.log("%cMake sure the type of your script tag is 'AtomScript'...","color: #f00;");}}else if(AtomScript.src==null){var scripts=document.getElementsByTagName("script");var AtomScripts=[];for(var i=0;i<scripts.length;i++){var script=scripts[i];if(script.getAttribute("type")=="AtomScript"||script.getAttribute("type")=="text/AtomScript"){code=script.innerHTML;}}}}
 function parseCode(){includeFiles();if(AtomScript.FORMAT)formatCode();convertVariables();convertMethods();convertObjects();convertObjectProperties();convertNameSpaceSplitters();removeComments();}
 function formatCode(){code=code.replace(/[\n\t\r]/g,"");}
-function removeComments(){code=code.replace(/^#[^\n]+/g,"");}
+function removeComments(){code=code.replace(/#[^\n]+/g,"");}
 function convertVariables(){var matches=code.match(/\B@\w+/g);if(matches!=null)
 for(var i=0;i<matches.length;i++){code=code.replace(matches[i].substring(0,1),"var ");}}
 function convertMethods(){var matches=code.match(/\$[^; ]+/g);if(matches!=null)
 for(var i=0;i<matches.length;i++){code=code.replace(matches[i].substring(0,1),"function ");}}
-function convertObjects(){var matches=code.match(/^\B\*[^;0-9 ]+/g);if(matches!=null)
+function convertObjects(){var matches=code.match(/\*[^;0-9 ]+/g);if(matches!=null)
 for(var i=0;i<matches.length;i++){code=code.replace(matches[i].substring(0,1),"new ");}}
 function convertObjectProperties(){code=code.replace(/this ->|this->|this-> |this -> /g,"this.");}
 function convertNameSpaceSplitters(){var matches=code.match(/::/g);if(matches!=null)
