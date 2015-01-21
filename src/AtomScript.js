@@ -91,7 +91,7 @@ function formatCode(){
 
 function removeComments(){
 
-	code = code.replace(/^#[^\n]+/g, "");
+	code = code.replace(/#[^\n]+/g, "");
 
 }
 
@@ -125,7 +125,7 @@ function convertMethods(){
 
 function convertObjects(){
 
-	var matches = code.match(/^\B\*[^;0-9 ]+/g);
+	var matches = code.match(/\*[^;0-9 ]+/g);
 	
 	if(matches != null)
 	
