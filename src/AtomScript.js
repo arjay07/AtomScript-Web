@@ -49,6 +49,23 @@ function onLoad(){
 
 		}
 
+	}else if(AtomScript.src == null){
+
+		var scripts = document.getElementsByTagName("script");
+		var AtomScripts = [];
+
+		for(var i = 0; i < scripts.length; i++){
+
+			var script = scripts[i];
+			
+			if(script.getAttribute("type") == "AtomScript" || script.getAttribute("type") == "text/AtomScript"){
+
+				code = script.innerHTML;
+
+			}
+
+		}
+
 	}
 
 }
@@ -74,13 +91,13 @@ function formatCode(){
 
 function removeComments(){
 
-	code = code.replace(/#[^;]+;/g, "");
+	code = code.replace(/^#[^\n]+/g, "");
 
 }
 
 function convertVariables(){
 
-	var matches = code.match(/@[^; ]+/g);
+	var matches = code.match(/\B@\w+/g);
 	
 	if(matches != null)
 	
@@ -108,7 +125,7 @@ function convertMethods(){
 
 function convertObjects(){
 
-	var matches = code.match(/\*[^;0-9 ]+/g);
+	var matches = code.match(/^\B\*[^;0-9 ]+/g);
 	
 	if(matches != null)
 	
@@ -304,12 +321,30 @@ function append(element, parent){
 
 }
 
-function get(id){
+function get(id, root){
 	
+	if(root == null)root = document;
+
 	if(id.startsWith("#")){
-		
-		return document.getElementById(id.substring(1, id.length));
-		
+
+		return root.getElementById(id.substring(1, id.length));
+
+	}else if(id.startsWith(".")){
+
+		return root.getElementsByClassName(id.substring(1, id.length));
+
+	}else if(id.startsWith("<") && id.endsWith(">")){
+
+		return root.getElementsByTagName(id.substring(1, id.length-1));
+
+	}else if(id.startsWith("^")){
+
+		return root.getElementsByName(id.substring(1, id.length));
+
+	}else{
+
+		return id;
+
 	}
 	
 }
