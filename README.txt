@@ -8,13 +8,13 @@
                                                                 | |          
                                                                 |_|          
 
-©ZeroSeven Interactive 2015
+Â©ZeroSeven Interactive 2015
 AtomScript is an interpreted programming language. The language is translated into JavaScript. 
 
 BASIC USE:
 
 	1. In your index.html document paste this in your head:
-		<script src = "path/to/AtomScript.js"></script>
+		<script src = "https://rawgit.com/arjay07/AtomScript/master/bin/AtomScript.js"></script>
 	
 	2. In your body of index.html, past this:
 		<script>
