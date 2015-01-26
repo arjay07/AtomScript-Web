@@ -97,7 +97,7 @@ function formatCode(){
 
 function removeComments(){
 
-	code = code.replace(/\B\#[^\n]+\b/g, "");
+	code = code.replace(/\B\#[^\n]+/g, "");
 
 }
 
