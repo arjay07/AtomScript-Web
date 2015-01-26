@@ -19,14 +19,19 @@ var AtomScript = {src: null, include: [], FORMAT: false, consolePath: "AtomScrip
 var Console = {};
 
 var code = "";
+var CURRENT_SRC;
+var CURRENT_SRC_DIR;
 
 function onLoad(){
 
-	console.log("%cAtomScript v0.5", "color: #0355ff; font-family: arial;");
+	console.log("%cAtomScript v0.5", "color: #0355ff; font-family: arial; font-size: 20px;");
 	console.log("%c©ZeroSeven Interactive 2015", "color: #ff0330; font-family: arial;");
 
 	if(AtomScript.src != null && AtomScript.src.endsWith(".atom")){
-	
+
+		CURRENT_SRC = readFile(AtomScript.src).request.responseURL;
+		CURRENT_SRC_DIR = CURRENT_SRC.substring(0, CURRENT_SRC.lastIndexOf("/"));
+
 		setScript(AtomScript.src);
 		parseCode();
 		//console.log(code);
@@ -79,6 +84,7 @@ function parseCode(){
 	convertObjects();
 	convertObjectProperties();
 	convertNameSpaceSplitters();
+	convertObjectPropertyCaller();
 	removeComments();
 
 }
@@ -91,7 +97,7 @@ function formatCode(){
 
 function removeComments(){
 
-	code = code.replace(/#[^\n]+/g, "");
+	code = code.replace(/\B\#[^\n]+\b/g, "");
 
 }
 
@@ -157,6 +163,38 @@ function convertNameSpaceSplitters(){
 
 }
 
+function convertObjectPropertyCaller(){
+
+	var matches = code.match(/\b\<(.+?)\>/g);
+
+	if(matches != null)
+		for(var i = 0; i < matches.length; i++){
+
+			var match = matches[i];
+			var propname = match.substring(1, match.length-1);
+
+			code = code.replace(match, "." + propname);
+
+		}
+
+}
+
+function convertObjectPropertyNameCaller(){
+
+	var matches = code.match(/\b\<(.+?)\> \w+|\<(.+?)\>\w+/g);
+
+	if(matches != null)
+		for(var i = 0; i < matches.length; i++){
+
+			var match = matches[i];
+			var propname = match.substring(1, match.indexOf(">")-1);
+
+			code = code.replace(match, "." + propname + ".");
+
+		}
+
+}
+
 function includeFiles(){
 
 	var matches = code.match(/include[^;]+;/g);
@@ -165,12 +203,27 @@ function includeFiles(){
 	
 		for(var i = 0; i < matches.length; i++){
 			
-			var match = matches[i];
-			var file = eval(match.split(" ")[1]);
-			if(file.endsWith(".atom")){
+			if(AtomScript.src.endsWith(".atom")){
 
-				var read = readFile(file);
-				code = code.replace(match, read);
+				var match = matches[i];
+				var file = CURRENT_SRC_DIR + "/" + eval(match.split(" ")[1]);
+				if(file.endsWith(".atom")){
+
+					var read = readFile(file).text;
+					code = code.replace(match, read);
+
+				}
+
+			}else if(AtomScript.src.startsWith("#")){
+
+				var match = matches[i];
+				var file = eval(match.split(" ")[1]);
+				if(file.endsWith(".atom")){
+
+					var read = readFile(file).text;
+					code = code.replace(match, read);
+
+				}
 
 			}
 		
@@ -185,13 +238,13 @@ function readFile(file){
 	request.send(null);
 	var returnValue = request.responseText;  
 	
-	return returnValue;
+	return {text: returnValue, request: request};
     
 }
 
 function setScript(file){
 
-	code = readFile(file);
+	code = readFile(file).text;
 
 }
 
@@ -325,7 +378,7 @@ function get(id, root){
 	
 	if(root == null)root = document;
 
-	if(id.startsWith("#")){
+	if(id.startsWith(":")){
 
 		return root.getElementById(id.substring(1, id.length));
 
@@ -333,7 +386,7 @@ function get(id, root){
 
 		return root.getElementsByClassName(id.substring(1, id.length));
 
-	}else if(id.startsWith("<") && id.endsWith(">")){
+	}else if(id.startsWith("<") && id.endsWith(">")){ 
 
 		return root.getElementsByTagName(id.substring(1, id.length-1));
 

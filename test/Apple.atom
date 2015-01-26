@@ -1,0 +1,15 @@
+@Apple = {
+
+	hallo: $(){
+	
+		alert("Hallo!");
+	
+	},
+	
+	say: $(text){
+	
+		alert("Apple says, \"" + text + "\"");
+	
+	}
+
+};

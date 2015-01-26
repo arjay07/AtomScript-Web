@@ -1,0 +1,25 @@
+#AtomScript
+include "Person.atom";
+
+@btn;
+@bob = *Person();
+bob::name = "Robert";
+bob::age = 15;
+
+Person<prototype>::jump = $(){
+
+	alert("JUMPED");
+
+}
+
+$main(){
+	
+	btn = get(":theBtn");
+	btn::onclick = $(){
+	
+		bob<say>("Hello, YouTube! My name is " + bob::name + "!");
+		bob<jump>();
+	
+	}
+	
+}
