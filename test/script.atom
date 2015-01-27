@@ -6,9 +6,9 @@ include "Person.atom";
 bob::name = "Robert";
 bob::age = 15;
 
-Person<prototype>::jump = $(){
+Person<prototype> ask = $(question){
 
-	alert("JUMPED");
+	return prompt(bob::name + " asks: " + question);
 
 }
 
@@ -18,7 +18,8 @@ $main(){
 	btn::onclick = $(){
 	
 		bob<say>("Hello, YouTube! My name is " + bob::name + "!");
-		bob<jump>();
+		@a = bob<ask>("What is your name?");
+		bob<say>("Hi, " + a + "!");
 	
 	}
 	

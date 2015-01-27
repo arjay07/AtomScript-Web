@@ -15,7 +15,7 @@
 
 window.onload = onLoad;
 
-var AtomScript = {src: null, include: [], FORMAT: false, consolePath: "AtomScript/console/main.html", startConsole: false};
+var AtomScript = {src: null, consolePath: "AtomScript/console/main.html", startConsole: false};
 var Console = {};
 
 var code = "";
@@ -24,7 +24,7 @@ var CURRENT_SRC_DIR;
 
 function onLoad(){
 
-	console.log("%cAtomScript v0.5", "color: #0355ff; font-family: arial; font-size: 20px;");
+	console.log("%cAtomScript v0.5.3", "color: #0355ff; font-family: arial; font-size: 20px;");
 	console.log("%c©ZeroSeven Interactive 2015", "color: #ff0330; font-family: arial;");
 
 	if(AtomScript.src != null && AtomScript.src.endsWith(".atom")){
@@ -50,7 +50,7 @@ function onLoad(){
 
 		}else{
 
-			console.log("%cMake sure the type of your script tag is 'AtomScript'...", "color: #f00;");
+			console.error("Make sure the type of your script tag is 'AtomScript'...");
 
 		}
 
@@ -78,20 +78,14 @@ function onLoad(){
 function parseCode(){
 
 	includeFiles();
-	if(AtomScript.FORMAT)formatCode();
 	convertVariables();
 	convertMethods();
 	convertObjects();
 	convertObjectProperties();
 	convertNameSpaceSplitters();
+	convertObjectPropertyNameCaller();
 	convertObjectPropertyCaller();
 	removeComments();
-
-}
-
-function formatCode(){
-
-	code = code.replace(/[\n\t\r]/g, "");
 
 }
 
@@ -117,7 +111,7 @@ function convertVariables(){
 
 function convertMethods(){
 
-	var matches = code.match(/\$[^; ]+/g);
+	var matches = code.match(/\$\w+|\$\(/g);
 	
 	if(matches != null)
 	
@@ -131,7 +125,7 @@ function convertMethods(){
 
 function convertObjects(){
 
-	var matches = code.match(/\*[^;0-9 ]+/g);
+	var matches = code.match(/\*\w\D\S[^;]+/g);
 	
 	if(matches != null)
 	
@@ -187,9 +181,10 @@ function convertObjectPropertyNameCaller(){
 		for(var i = 0; i < matches.length; i++){
 
 			var match = matches[i];
-			var propname = match.substring(1, match.indexOf(">")-1);
+			var propname = match.substring(1, match.indexOf(">"));
+			var other = match.split(/\>/g)[1];
 
-			code = code.replace(match, "." + propname + ".");
+			code = code.replace(match, "." + propname + "." + other);
 
 		}
 
@@ -235,8 +230,28 @@ function readFile(file){
     
     var request = new XMLHttpRequest();
 	request.open("GET", file, false);
-	request.send(null);
-	var returnValue = request.responseText;  
+    var returnValue = null;
+	request.onload = function(e){
+
+		if(request.readyState == 4){
+
+			if(request.status === 200){
+
+				returnValue = request.responseText;
+
+			}
+
+		}
+
+	};
+
+	request.onerror = function(e){
+
+		console.error(request.statusText);
+
+	};
+
+	request.send(null); 
 	
 	return {text: returnValue, request: request};
     
