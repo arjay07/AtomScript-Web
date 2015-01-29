@@ -4,7 +4,7 @@
  *        /  \    | |_    ___    _ __ ___   | (___     ___   _ __   _   _ __   | |_ 
  *       / /\ \   | __|  / _ \  | '_ ` _ \   \___ \   / __| | '__| | | | '_ \  | __|
  *      / ____ \  | |_  | (_) | | | | | | |  ____) | | (__  | |    | | | |_) | | |_ 
- *     /_/    \_\  \__|  \___/  |_| |_| |_| |_____/   \___| |_|    |_| | .__/   \__|
+ *     /_/    \_\  \__|  \___/  |_| |_| |_| |_____/   \___| |_|    |_| | .__/   \__| v0.5.4
  *                                                                     | |          
  *                                                                     |_|          
  *
@@ -24,18 +24,18 @@ var CURRENT_SRC_DIR;
 
 function onLoad(){
 
-	console.log("%cAtomScript v0.5.3", "color: #0355ff; font-family: arial; font-size: 20px;");
+	console.log("%cAtomScript v0.5.4", "color: #0355ff; font-family: arial; font-size: 20px;");
 	console.log("%c©ZeroSeven Interactive 2015", "color: #ff0330; font-family: arial;");
 
 	if(AtomScript.src != null && AtomScript.src.endsWith(".atom")){
 
-		CURRENT_SRC = readFile(AtomScript.src).request.responseURL;
+		CURRENT_SRC = readFile(AtomScript.src).url;
 		CURRENT_SRC_DIR = CURRENT_SRC.substring(0, CURRENT_SRC.lastIndexOf("/"));
 
 		setScript(AtomScript.src);
 		parseCode();
 		//console.log(code);
-		eval(code + "if(main){ if(AtomScript.startConsole)Console.start(); main(); }");
+		eval(code + "if(main)main();");
 	
 	}else if(AtomScript.src != null && AtomScript.src.startsWith("#")){
 
@@ -86,12 +86,13 @@ function parseCode(){
 	convertObjectPropertyNameCaller();
 	convertObjectPropertyCaller();
 	removeComments();
+	convertColor();
 
 }
 
 function removeComments(){
 
-	code = code.replace(/\B\#[^\n]+/g, "");
+	code = code.replace(/\B\#[^\n]+\n/g, "");
 
 }
 
@@ -190,6 +191,12 @@ function convertObjectPropertyNameCaller(){
 
 }
 
+function convertColor(){
+
+	code = code.replace(/%c/g, "#");
+
+}
+
 function includeFiles(){
 
 	var matches = code.match(/include[^;]+;/g);
@@ -216,6 +223,11 @@ function includeFiles(){
 				if(file.endsWith(".atom")){
 
 					var read = readFile(file).text;
+					code = code.replace(match, read);
+
+				}else{
+
+					var read = readFile(file + ".atom").text;
 					code = code.replace(match, read);
 
 				}
@@ -253,7 +265,7 @@ function readFile(file){
 
 	request.send(null); 
 	
-	return {text: returnValue, request: request};
+	return {text: returnValue, url: request.responseURL, request: request};
     
 }
 
@@ -297,124 +309,6 @@ if (!String.prototype.startsWith) {
       return this.lastIndexOf(searchString, position) === position;
     }
   });
-}
-
-/***
- *              _                   _____           _       _              _____ _____ 
- *         /\  | |                 / ____|         (_)     | |       /\   |  __ \_   _|
- *        /  \ | |_ ___  _ __ ___ | (___   ___ _ __ _ _ __ | |_     /  \  | |__) || |  
- *       / /\ \| __/ _ \| '_ ` _ \ \___ \ / __| '__| | '_ \| __|   / /\ \ |  ___/ | |  
- *      / ____ \ || (_) | | | | | |____) | (__| |  | | |_) | |_   / ____ \| |    _| |_ 
- *     /_/    \_\__\___/|_| |_| |_|_____/ \___|_|  |_| .__/ \__| /_/    \_\_|   |_____|
- *                                                   | |                               
- *                                                   |_|                               
- */
-
-var Doc = document;
-var Window = window;
-
-function createButton(text){
-
-	var i = document.createElement("input");
-	i.type = "button";
-	i.value = text;
-	i.onClick = function(onclick){
-	
-		i.addEventListener("click", onclick);
-	
-	};
-	
-	return i;
-
-}
-
-function createTextInput(){
-
-	var i = document.createElement("input");
-	i.type = "text";
-	i.onKeyPress = function(onpress){
-	
-		i.addEventListener("keydown", onpress);
-	
-	};
-	
-	i.setText = function(t){
-	
-		i.value = t;
-	
-	}
-	
-	i.getText = function(){
-	
-		return i.value;
-		
-	}
-	
-	return i;
-
-}
-
-function createText(text){
-
-	var i = document.createElement("span");
-	i.innerText = text;
-	
-	i.setText = function(t){
-		
-		i.innerHTML = t;
-	
-	}
-	
-	i.getText = function(){
-	
-		return i.innerText;
-	
-	}
-	
-	return i;
-
-}
-
-function createDiv(){
-
-	var i = Doc.createElement("div");
-	return i;
-
-}
-
-function append(element, parent){
-
-	if(parent==null)Doc.body.appendChild(element);
-	else parent.appendChild(element);
-
-}
-
-function get(id, root){
-	
-	if(root == null)root = document;
-
-	if(id.startsWith(":")){
-
-		return root.getElementById(id.substring(1, id.length));
-
-	}else if(id.startsWith(".")){
-
-		return root.getElementsByClassName(id.substring(1, id.length));
-
-	}else if(id.startsWith("<") && id.endsWith(">")){ 
-
-		return root.getElementsByTagName(id.substring(1, id.length-1));
-
-	}else if(id.startsWith("^")){
-
-		return root.getElementsByName(id.substring(1, id.length));
-
-	}else{
-
-		return id;
-
-	}
-	
 }
 
 /***

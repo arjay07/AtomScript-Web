@@ -1,26 +1,58 @@
 #AtomScript
-include "Person.atom";
-
-@btn;
-@bob = *Person();
-bob::name = "Robert";
-bob::age = 15;
-
-Person<prototype> ask = $(question){
-
-	return prompt(bob::name + " asks: " + question);
-
-}
+include "../Proton/Proton.atom";
 
 $main(){
+
+	Doc::body::style::fontFamily = "Arial";
 	
-	btn = get(":theBtn");
-	btn::onclick = $(){
+	@btn = Proton<createButton>("Make table");
+	btn<onclick> = makeTable;
+		
+	Proton<append>(btn);
 	
-		bob<say>("Hello, YouTube! My name is " + bob::name + "!");
-		@a = bob<ask>("What is your name?");
-		bob<say>("Hi, " + a + "!");
+}
+
+$makeTable(){
+
+	@c = parseInt(prompt("Columns?:"));
+	@r = parseInt(prompt("Rows?:"));
+	@table = Proton<createTable>(c, r);
+	
+	for(@x = 0; x < r; x++){
+	
+		for(@y = 0; y < c; y++){
+		
+			@cell = table<getCell>(x, y);
+			cell::style::border = "1px solid black";
+			cell::style::backgroundColor = getRandomColor();
+			cell::style::textAlign = "center";
+			cell::style::width = "25px";
+			cell::style::height = "25px";
+			@i = (x+1) * (y+1);
+			#cell<innerHTML> = i;
+		
+		}
 	
 	}
 	
+	table::style::backgroundColor = "black";
+	table::style::margin = "10px";
+	
+	Proton<append>(table);
+
+}
+
+$randomInt(min, max){
+
+    return Math<floor>((Math<random>() * max) + min);
+
+}
+
+$getRandomColor() {
+    @letters = "0123456789ABCDEF"::split("");
+    @color = "%c";
+    for (@i = 0; i < 6; i++ ) {
+        color += letters[randomInt(0, 16)];
+    }
+    return color;
 }
