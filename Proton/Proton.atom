@@ -7,7 +7,7 @@
 #                                   
 #	©ZeroSeven Interactive 2015   
 #	API for AtomScript
-#
+# 
 
 @Proton = {};
 @Doc = document;
