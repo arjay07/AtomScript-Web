@@ -3,7 +3,7 @@
 #   | |__) | __ ___ | |_ ___  _ __  
 #   |  ___/ '__/ _ \| __/ _ \| '_ \ 
 #   | |   | | | (_) | || (_) | | | |
-#   |_|   |_|  \___/ \__\___/|_| |_| v0.1.2
+#   |_|   |_|  \___/ \__\___/|_| |_| v0.1.5
 #                                   
 #	©ZeroSeven Interactive 2015   
 #	API for AtomScript
@@ -100,9 +100,8 @@ Proton<list> = $(){
 #DOM Methods
 Proton<createButton> = $(text){
 
-	@i = Doc<createElement>("input");
-	i<type> = "button";
-	i<value> = text;
+	@i = Doc<createElement>("button");
+	i<innerHTML> = text;
 	i<onClick> = $(onclick){
 	
 		i<addEventListener>("click", onclick);
@@ -111,13 +110,13 @@ Proton<createButton> = $(text){
 	
 	i<setText> = $(t){
 	
-		i<value> = t;
+		i<innerHTML> = t;
 	
 	}
 	
 	i<getText> = $(){
 	
-		return i<value>;
+		return i<innerHTML>;
 		
 	}
 	
@@ -220,6 +219,42 @@ Proton<createTable> = $(columns, rows){
 	}
 	
 	return table;
+
+}
+
+Proton<createList> = $(array, type){
+
+	@list;
+
+	if(type == 0 || type == "ul" || type == null){
+	
+		list = Doc<createElement>("ul");
+	
+	}else if(type == 1 || type == "ol"){
+	
+		list = Doc<createElement>("ol");
+	
+	}
+
+	for(@i = 0; i < array::length; i++){
+	
+		el = array[i];
+		@item = Doc<createElement>("li");
+		if(el.constructor == String || el.constructor == Number){
+			
+			item<innerHTML> = el;
+		
+		}else{
+			
+			item<innerHTML> = el;
+		
+		}
+		
+		Proton<append>(item, list);
+	
+	}
+	
+	return list;
 
 }
 

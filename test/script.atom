@@ -1,35 +1,73 @@
 #AtomScript
+
 include "../Proton/Proton.atom";
+
+@currentColor = "%c000000";
+@tablesDiv;
+@mouseDown = false;
+@drawing = true;
+@erasing = false;
 
 $main(){
 
-	Doc::body::style::fontFamily = "Arial";
+	Doc::body::style::fontFamily = "Arial, Helvetica, sans-serif";
 	
-	@btn = Proton<createButton>("Make table");
+	#@listEl = Proton<createList>(["hallo", "list", Proton<createButton>("BUTTON")::outerHTML], 1);
+	
+	@btn = Proton<createButton>("Make canvas");
 	btn<onclick> = makeTable;
+	
+	@colorInput = Proton<createTextInput>();
+	colorInput::style<display> = "inline";
+	colorInput::style<padding> = "5px";
+	colorInput<setText>(currentColor);
+	colorInput::style<color> = currentColor;
+	colorInput::style<border> = "1px solid %c000";
+	colorInput::style<margin> = "10px";
+	
+	@drawTool = Proton<createButton>("Draw");
+	drawTool<onclick> = $(){
+	
+		if(erasing)erasing = false;
+		if(!drawing)drawing = true;
+	
+	}
+	
+	@eraseTool = Proton<createButton>("Erase");
+	eraseTool<onclick> = $(){
+	
+		if(!erasing)erasing = true;
+		if(drawing)drawing = false;
+	
+	}
+	
+	tablesDiv = Proton<createDiv>();
+	tablesDiv::style<backgroundColor> = "%cf2f2f2";
+	tablesDiv::style<padding> = "15px";
+	tablesDiv::style<margin> = "15px";
 		
 	Proton<append>(btn);
+	Proton<append>(colorInput);
+	Proton<append>(drawTool);
+	Proton<append>(eraseTool);
+	Proton<append>(tablesDiv);
+	#Proton<append>(listEl);
+	
+	Window<setInterval>($(){currentColor = colorInput<getText>();}, 300);
 	
 }
 
 $makeTable(){
 
-	@c = parseInt(prompt("Columns?:"));
-	@r = parseInt(prompt("Rows?:"));
+	@c = parseInt(prompt("Columns?"));
+	@r = parseInt(prompt("Rows?"));
 	@table = Proton<createTable>(c, r);
 	
 	for(@x = 0; x < r; x++){
 	
 		for(@y = 0; y < c; y++){
 		
-			@cell = table<getCell>(x, y);
-			cell::style::border = "1px solid black";
-			cell::style::backgroundColor = getRandomColor();
-			cell::style::textAlign = "center";
-			cell::style::width = "25px";
-			cell::style::height = "25px";
-			@i = (x+1) * (y+1);
-			#cell<innerHTML> = i;
+			createCell(table, x, y);
 		
 		}
 	
@@ -37,8 +75,9 @@ $makeTable(){
 	
 	table::style::backgroundColor = "black";
 	table::style::margin = "10px";
+	table::style::borderSpacing = "0";
 	
-	Proton<append>(table);
+	Proton<append>(table, tablesDiv);
 
 }
 
@@ -55,4 +94,53 @@ $getRandomColor() {
         color += letters[randomInt(0, 16)];
     }
     return color;
+}
+
+$createCell(table, x, y){
+
+	@cell = table<getCell>(x, y);
+	cell::style::backgroundColor = "%cfff";
+	cell::style::textAlign = "center";
+	cell::style::width = "5px";
+	cell::style::height = "5px";
+	cell::style::cursor = "pointer";
+	cell::style::margin = "0";
+	cell::class = "unselectable";
+	cell<addEventListener>("click", $(){
+	
+		if(drawing)cell::style::backgroundColor = currentColor;
+		else if(erasing)cell::style::backgroundColor = "%cfff";
+	
+	});
+	cell<addEventListener>("mousedown", $(){
+	
+		mouseDown = true;
+		if(mouseDown){
+		
+			if(drawing)cell::style::backgroundColor = currentColor;
+			else if(erasing)cell::style::backgroundColor = "%cfff";
+		
+		}
+		console<log>(mouseDown);
+	
+	});
+	cell<addEventListener>("mouseup", $(){
+	
+		mouseDown = false;
+		console<log>(mouseDown);
+	
+	});
+	cell<addEventListener>("mouseover", $(){
+	
+		if(mouseDown){
+		
+			if(drawing)cell::style::backgroundColor = currentColor;
+			else if(erasing)cell::style::backgroundColor = "%cfff";
+		
+		}
+	
+	});
+	
+	return cell;
+
 }

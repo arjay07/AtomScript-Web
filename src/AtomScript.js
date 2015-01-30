@@ -208,7 +208,8 @@ function includeFiles(){
 			if(AtomScript.src.endsWith(".atom")){
 
 				var match = matches[i];
-				var file = CURRENT_SRC_DIR + "/" + eval(match.split(" ")[1]);
+				var includer = match.split(" ")[1];
+				var file = CURRENT_SRC_DIR + "/" + eval(includer);
 				if(file.endsWith(".atom")){
 
 					var read = readFile(file).text;
