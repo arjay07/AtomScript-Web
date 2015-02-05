@@ -3,7 +3,7 @@
 #   | |__) | __ ___ | |_ ___  _ __  
 #   |  ___/ '__/ _ \| __/ _ \| '_ \ 
 #   | |   | | | (_) | || (_) | | | |
-#   |_|   |_|  \___/ \__\___/|_| |_| v0.1.5
+#   |_|   |_|  \___/ \__\___/|_| |_| v0.1.5.1
 #                                   
 #	©ZeroSeven Interactive 2015   
 #	API for AtomScript
@@ -188,10 +188,11 @@ Proton<append> = $(element, parent){
 Proton<createTable> = $(columns, rows){
 
 	@table = Doc<createElement>("table");
-	table<cells> = [];
+	table<table> = [];
 	table<size> = 0;
-	table<columns> = columns;
-	table<rows> = rows;
+	table<columnCount> = columns;
+	table<rowCount> = rows;
+	table<cells> = [];
 	
 	for(@i = 0; i < rows; i++){
 	
@@ -203,18 +204,32 @@ Proton<createTable> = $(columns, rows){
 			@data = Doc<createElement>("td");
 			Proton<append>(data, row);
 			rowArray<push>(data);
+			table::cells<push>(data);
 			table<size>++;
 
 		}
 		
 		Proton<append>(row, table);
-		table::cells<push>(rowArray);
+		table::table<push>(rowArray);
 	
 	}
 	
 	table<getCell> = $(x, y){
 	
-		return table<cells>[x][y];
+		@cell = table<table>[x][y];
+		return cell;
+	
+	}
+	
+	table<applyToCells> = $(applier){
+	
+		for(@r = 0; r < table::rowCount; r++)
+			for(@c = 0; c < table::columnCount; c++){
+			
+				@cell = table<getCell>(r, c);
+				applier(cell);
+			
+			}
 	
 	}
 	

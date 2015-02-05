@@ -1,4 +1,4 @@
-#AtomScript
+# AtomScript
 
 include "../Proton/Proton.atom";
 
@@ -7,6 +7,9 @@ include "../Proton/Proton.atom";
 @mouseDown = false;
 @drawing = true;
 @erasing = false;
+@replacing = false;
+@colorChecker = null;
+@tableCount = 0;
 
 $main(){
 
@@ -29,6 +32,7 @@ $main(){
 	drawTool<onclick> = $(){
 	
 		if(erasing)erasing = false;
+		if(replacing)replacing = false;
 		if(!drawing)drawing = true;
 	
 	}
@@ -37,6 +41,16 @@ $main(){
 	eraseTool<onclick> = $(){
 	
 		if(!erasing)erasing = true;
+		if(replacing)replacing = false;
+		if(drawing)drawing = false;
+	
+	}
+	
+	@replaceTool = Proton<createButton>("Replace");
+	replaceTool<onclick> = $(){
+	
+		if(erasing)erasing = false;
+		if(!replacing)replacing = true;
 		if(drawing)drawing = false;
 	
 	}
@@ -50,34 +64,37 @@ $main(){
 	Proton<append>(colorInput);
 	Proton<append>(drawTool);
 	Proton<append>(eraseTool);
+	Proton<append>(replaceTool);
 	Proton<append>(tablesDiv);
 	#Proton<append>(listEl);
 	
-	Window<setInterval>($(){currentColor = colorInput<getText>();}, 300);
+	@checkColor = $(){
+	
+		currentColor = colorInput<getText>();
+		
+	};
+	
+	colorChecker = Window<setInterval>(checkColor, 300);
 	
 }
 
 $makeTable(){
 
+	tableCount++;
 	@c = parseInt(prompt("Columns?"));
 	@r = parseInt(prompt("Rows?"));
-	@table = Proton<createTable>(c, r);
-	
-	for(@x = 0; x < r; x++){
-	
-		for(@y = 0; y < c; y++){
-		
-			createCell(table, x, y);
-		
-		}
-	
-	}
+	@table = Proton<createTable>(c, r);	
+	table<applyToCells>(createCell);
 	
 	table::style::backgroundColor = "black";
 	table::style::margin = "10px";
 	table::style::borderSpacing = "0";
+	table::class = "Canvas" + tableCount;
 	
 	Proton<append>(table, tablesDiv);
+	console<log>(table<rowCount>);
+	
+	return table;
 
 }
 
@@ -96,20 +113,20 @@ $getRandomColor() {
     return color;
 }
 
-$createCell(table, x, y){
+$createCell(cell){
 
-	@cell = table<getCell>(x, y);
 	cell::style::backgroundColor = "%cfff";
 	cell::style::textAlign = "center";
 	cell::style::width = "5px";
 	cell::style::height = "5px";
 	cell::style::cursor = "pointer";
 	cell::style::margin = "0";
-	cell::class = "unselectable";
+	cell::class = "unselectable " + "Canvas" + tableCount;
 	cell<addEventListener>("click", $(){
 	
 		if(drawing)cell::style::backgroundColor = currentColor;
 		else if(erasing)cell::style::backgroundColor = "%cfff";
+		else if(replacing)replace(Proton<get>(cell<class>)[0], cell);
 	
 	});
 	cell<addEventListener>("mousedown", $(){
@@ -140,7 +157,20 @@ $createCell(table, x, y){
 		}
 	
 	});
-	
-	return cell;
+
+}
+
+$replace(table, cell){
+
+	@cellColor = cell::style<backgroundColor>;
+	for(@r = 0; i < table::cells::length; i++){
+		
+		if(cell::style<backgroundColor> == cellColor){
+		
+			table::cells[i]::style<backgroundColor> = currentColor;
+		
+		}
+		
+	}
 
 }
