@@ -15,7 +15,7 @@
 
 window.onload = onLoad;
 
-var AtomScript = {src: null, consolePath: "AtomScript/console/main.html", startConsole: false};
+var AtomScript = {src: null, consolePath: "AtomScript/console/main.html", startConsole: false, CODE: "", Proton: true};
 var Console = {};
 
 var code = "";
@@ -72,6 +72,8 @@ function onLoad(){
 		}
 
 	}
+
+	AtomScript.CODE = code;
 
 }
 

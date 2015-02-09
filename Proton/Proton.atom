@@ -3,7 +3,7 @@
 #   | |__) | __ ___ | |_ ___  _ __  
 #   |  ___/ '__/ _ \| __/ _ \| '_ \ 
 #   | |   | | | (_) | || (_) | | | |
-#   |_|   |_|  \___/ \__\___/|_| |_| v0.1.5.1
+#   |_|   |_|  \___/ \__\___/|_| |_| v0.2
 #                                   
 #	©ZeroSeven Interactive 2015   
 #	API for AtomScript
@@ -12,6 +12,13 @@
 @Proton = {};
 @Doc = document;
 @Window = window;
+
+#Stats
+Proton<stats> = {
+
+	currZIndex: 999
+
+};
 
 #List
 Proton<list> = $(){
@@ -96,6 +103,37 @@ Proton<list> = $(){
 	}
 
 }
+
+#Pointer
+Proton<Pointer> = {x: 0, y: 0, state: "up"};
+
+Proton<Pointer>update = $(e){
+
+	if(e.pageX || e.pageY){
+	
+		Proton<Pointer>x = e.pageX;
+		Proton<Pointer>y = e.pageY;
+	
+	}else if(e.clientX || e.clientY){
+	
+		Proton<Pointer>x = e.clientX + document.documentElement.scrollLeft;
+		Proton<Pointer>y = e.clientY + document.documentElement.scrollTop;
+	
+	}
+
+};
+
+Doc<addEventListener>("mousemove", Proton::Pointer<update>);
+Doc<addEventListener>("mousedown", $(){
+
+	Proton<Pointer>state = "down";
+
+});
+Doc<addEventListener>("mouseup", $(){
+
+	Proton<Pointer>state = "up";
+
+});
 
 #DOM Methods
 Proton<createButton> = $(text){
@@ -270,6 +308,124 @@ Proton<createList> = $(array, type){
 	}
 	
 	return list;
+
+}
+
+Proton<createDialog> = $(width, height, x, y, title, innerContent){
+
+	@dialog = Proton<createDiv>();
+	@titleBar = Proton<createDiv>();
+	@content = Proton<createDiv>();
+	@optionBar = Proton<createDiv>();
+	
+	dialog::style<width> = width;
+	dialog::style<height> = height;
+	Proton<style>(dialog, "position", "absolute");
+	Proton<style>(dialog, "left", x + "px");
+	Proton<style>(dialog, "top", y + "px");
+	Proton<style>(dialog, "margin", 0);
+	Proton<style>(dialog, "padding", 0);
+	#Proton<style>(dialog, "-moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -o-user-select: none; user-select: none;");
+	
+	titleBar<innerHTML> = "<h2>" + title + "</h2>";
+	Proton<style>(titleBar, "cursor: pointer; position: absolute; top: 0; left: 0; width: 100%; display: block; height: 20%;-moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -o-user-select: none; user-select: none;");
+	
+	content<innerHTML> = innerContent;
+	Proton<style>(content, "position: relative; top: 20%; left: 0; width: 98%; height: 60%; display: block; overflow: auto;");
+	
+	Proton<style>(optionBar, "position: relative; top: 20%; left: 0; width: 100%; height: 20%; display: block; text-align: center;-moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -o-user-select: none; user-select: none;");
+	
+	Proton<append>(titleBar, dialog);
+	Proton<append>(content, dialog);
+	Proton<append>(optionBar, dialog);
+	
+	dialog<titleBar> = titleBar;
+	dialog<content> = content;
+	dialog<optionBar> = optionBar;
+	
+	titleBar<onmousemove> = $(){
+	
+		if(Proton<Pointer>state == "down"){
+		
+			@pointerX = Proton::Pointer::x - parseInt(width::replace("px", ""))/2;
+			@pointerY = Proton::Pointer::y - parseInt(height::replace("px", "")) + parseInt(height::replace("px", "")) - parseInt(titleBar::style::height::replace("px", ""));
+			Proton<style>(dialog, "left", pointerX + "px");
+			Proton<style>(dialog, "top", pointerY + "px");
+		
+		}
+	
+	}
+	
+	dialog<create> = $(parent){
+	
+		if(parent!=null)Proton<append>(dialog, parent);
+		else Proton<append>(dialog);
+		
+		dialog::titleBar<addEventListener>("mousedown", $(){});
+		
+		dialog::style<display> = "none";
+	
+	}
+	
+	dialog<show> = $(){
+	
+		dialog::style<display> = "block";
+		Proton<stats>currZIndex++;
+		Proton<style>(dialog, "zIndex", Proton::stats::currZIndex);
+	
+	}
+	
+	dialog<close> = $(){
+	
+		dialog::style<display> = "none";
+	
+	}
+	
+	return dialog;
+
+}
+
+Proton<style> = $(element, style, value){
+
+	if(value == null){
+	
+		@styleAttr = "";
+		if(element<getAttribute>("style") != null)styleAttr = element<getAttribute>("style");
+		element<setAttribute>("style", styleAttr + style);
+	
+	}else{
+	
+		element::style[style] = value;
+	
+	}
+
+}
+
+Proton<CSS> = $(){
+
+	@style = Doc<createElement>("style");
+	
+	style<appendChild>(Doc<createTextNode>(""));
+	
+	Doc::head<appendChild>(style);
+	
+	@sheet = style<sheet>;
+	
+	sheet<add> = $(selector, rules, index){
+	
+		if("insertRule" in sheet){
+		
+			sheet<insertRule>(selector + "{" + rules + "}", index )
+		
+		}else if("addRule" in sheet){
+		
+			sheet<addRule>(selector, rules, index);
+		
+		}
+	
+	}
+	
+	return sheet;
 
 }
 

@@ -8,9 +8,16 @@
 ©ZeroSeven Interactive 2015   
 API for AtomScript
 
+v 0.2
+*Added Dialog API (createDialog method)
+*Added CSS API (style method and CSS method)
+	-style method adds a style to an element
+	-CSS method adds a style rule
+
 v 0.1.5.1
 *Added applyToCells method to createTable
 *Updated example files
+*Fixed comment bug
 
 v 0.1.5
 *Renewed createButton method

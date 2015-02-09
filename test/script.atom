@@ -2,175 +2,143 @@
 
 include "../Proton/Proton.atom";
 
-@currentColor = "%c000000";
-@tablesDiv;
-@mouseDown = false;
-@drawing = true;
-@erasing = false;
-@replacing = false;
-@colorChecker = null;
-@tableCount = 0;
+@CSSObj;
+@dialog1;
+@dialog2;
+@dialog3;
+@dialog4;
 
 $main(){
 
-	Doc::body::style::fontFamily = "Arial, Helvetica, sans-serif";
+	dialog1 = createDialog1();
+	dialog2 = createDialog2();
+	dialog3 = createDialog3();
+	dialog4 = createDialog4();
 	
-	#@listEl = Proton<createList>(["hallo", "list", Proton<createButton>("BUTTON")::outerHTML], 1);
+	Proton::get(":open1")::addEventListener("click", $(){
 	
-	@btn = Proton<createButton>("Make canvas");
-	btn<onclick> = makeTable;
+		dialog1<show>();
+		console<log>("Show");
 	
-	@colorInput = Proton<createTextInput>();
-	colorInput::style<display> = "inline";
-	colorInput::style<padding> = "5px";
-	colorInput<setText>(currentColor);
-	colorInput::style<color> = currentColor;
-	colorInput::style<border> = "1px solid %c000";
-	colorInput::style<margin> = "10px";
+	});
 	
-	@drawTool = Proton<createButton>("Draw");
-	drawTool<onclick> = $(){
+	Proton::get(":open2")::addEventListener("click", $(){
 	
-		if(erasing)erasing = false;
-		if(replacing)replacing = false;
-		if(!drawing)drawing = true;
+		dialog2<show>();
+		console<log>("Show");
 	
-	}
+	});
 	
-	@eraseTool = Proton<createButton>("Erase");
-	eraseTool<onclick> = $(){
+	Proton::get(":open3")::addEventListener("click", $(){
 	
-		if(!erasing)erasing = true;
-		if(replacing)replacing = false;
-		if(drawing)drawing = false;
+		dialog3<show>();
+		console<log>("Show");
 	
-	}
+	});
 	
-	@replaceTool = Proton<createButton>("Replace");
-	replaceTool<onclick> = $(){
+	Proton::get(":open4")::addEventListener("click", $(){
 	
-		if(erasing)erasing = false;
-		if(!replacing)replacing = true;
-		if(drawing)drawing = false;
+		dialog4<show>();
+		console<log>("Show");
 	
-	}
+	});
 	
-	tablesDiv = Proton<createDiv>();
-	tablesDiv::style<backgroundColor> = "%cf2f2f2";
-	tablesDiv::style<padding> = "15px";
-	tablesDiv::style<margin> = "15px";
-		
-	Proton<append>(btn);
-	Proton<append>(colorInput);
-	Proton<append>(drawTool);
-	Proton<append>(eraseTool);
-	Proton<append>(replaceTool);
-	Proton<append>(tablesDiv);
-	#Proton<append>(listEl);
+	CSSObj = Proton<CSS>();
+	CSSObj<add>("body", "background-color: %cff0230;");
+	#CSSObj<add>("div", "box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);");
+
+}
+
+$createDialog1(){
+
+	@dialog = Proton<createDialog>("500px", "300px", 500, 0, "Dialog", "This is the content. <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>");
+	#Proton<style>(dialog, "boxShadow", "0px 0px 25px rgba(0, 0, 0, 0.5)");
+	dialog<create>();
+	#dialog<show>();
 	
-	@checkColor = $(){
+	@btn = Proton<createButton>("Close");
 	
-		currentColor = colorInput<getText>();
-		
+	Proton<append>(btn, dialog<optionBar>);
+	
+	Proton<style>(dialog, "background-color: %ce3e3e3; border-radius: 10px;");
+	Proton<style>(dialog::titleBar, "backgroundColor", "%cc0c0c0");
+	Proton<style>(dialog::titleBar, "borderTopLeftRadius", "10px");
+	Proton<style>(dialog::titleBar, "borderTopRightRadius", "10px");
+	Proton<style>(dialog::content, "padding: 5px;");
+	Proton<style>(dialog::optionBar, "background-color: %ce3e3e3; border-radius: 10px;");
+	
+	btn<onclick> = $(){
+	
+		dialog<close>();
+		console<log>("Close");
+	
 	};
 	
-	colorChecker = Window<setInterval>(checkColor, 300);
-	
-}
-
-$makeTable(){
-
-	tableCount++;
-	@c = parseInt(prompt("Columns?"));
-	@r = parseInt(prompt("Rows?"));
-	@table = Proton<createTable>(c, r);	
-	table<applyToCells>(createCell);
-	
-	table::style::backgroundColor = "black";
-	table::style::margin = "10px";
-	table::style::borderSpacing = "0";
-	table::class = "Canvas" + tableCount;
-	
-	Proton<append>(table, tablesDiv);
-	console<log>(table<rowCount>);
-	
-	return table;
+	return dialog;
 
 }
 
-$randomInt(min, max){
+$createDialog2(){
 
-    return Math<floor>((Math<random>() * max) + min);
+	@dialog = Proton<createDialog>("720px", "420px", 500, 0, "Dialog 2", "This is the content for dialog2 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>");
+	Proton<style>(dialog, "boxShadow", "0px 0px 25px rgba(0, 0, 0, 0.5)");
+	dialog<create>();
+	#dialog<show>();
+	
+	@btn = Proton<createButton>("Close");
+	
+	Proton<append>(btn, dialog<optionBar>);
+	
+	Proton<style>(dialog, "background-color: %ce3e3e3; border-radius: 10px;");
+	Proton<style>(dialog::titleBar, "backgroundColor", "%cc0c0c0");
+	Proton<style>(dialog::titleBar, "borderTopLeftRadius", "10px");
+	Proton<style>(dialog::titleBar, "borderTopRightRadius", "10px");
+	Proton<style>(dialog::content, "padding: 5px;");
+	Proton<style>(dialog::optionBar, "background-color: %cd0d0d0; border-radius: 10px;");
+	
+	btn<onclick> = $(){
+	
+		dialog<close>();
+		console<log>("Close");
+	
+	};
+	
+	return dialog;
+}
+
+$createDialog3(){
+
+	@dialog = Proton<createDialog>("720px", "420px", 500, 0, "Dialog 3", "This is the content for dialog2<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>");
+	Proton<style>(dialog, "boxShadow", "0px 0px 25px rgba(0, 0, 0, 0.5)");
+	dialog<create>();
+	#dialog<show>();
+	
+	@btn = Proton<createButton>("Close");
+	
+	Proton<append>(btn, dialog<optionBar>);
+	
+	Proton<style>(dialog, "background-color: %c00ffff; border-radius: 10px;");
+	Proton<style>(dialog::titleBar, "backgroundColor", "%cc0c0c0");
+	Proton<style>(dialog::titleBar, "borderTopLeftRadius", "10px");
+	Proton<style>(dialog::titleBar, "borderTopRightRadius", "10px");
+	Proton<style>(dialog::content, "padding: 5px;");
+	Proton<style>(dialog::optionBar, "background-color: %cd2d2d2; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;");
+	
+	btn<onclick> = $(){
+	
+		dialog<close>();
+		console<log>("Close");
+	
+	};
+	
+	return dialog;
 
 }
 
-$getRandomColor() {
-    @letters = "0123456789ABCDEF"::split("");
-    @color = "%c";
-    for (@i = 0; i < 6; i++ ) {
-        color += letters[randomInt(0, 16)];
-    }
-    return color;
-}
+$createDialog4(){
 
-$createCell(cell){
-
-	cell::style::backgroundColor = "%cfff";
-	cell::style::textAlign = "center";
-	cell::style::width = "5px";
-	cell::style::height = "5px";
-	cell::style::cursor = "pointer";
-	cell::style::margin = "0";
-	cell::class = "unselectable " + "Canvas" + tableCount;
-	cell<addEventListener>("click", $(){
+	@dialog = Proton::createDialog("500px", "300px", 0, 0, "Empty Dialog", " <strong>NO CONTENT </strong>");
+	dialog<create>();
+	return dialog;
 	
-		if(drawing)cell::style::backgroundColor = currentColor;
-		else if(erasing)cell::style::backgroundColor = "%cfff";
-		else if(replacing)replace(Proton<get>(cell<class>)[0], cell);
-	
-	});
-	cell<addEventListener>("mousedown", $(){
-	
-		mouseDown = true;
-		if(mouseDown){
-		
-			if(drawing)cell::style::backgroundColor = currentColor;
-			else if(erasing)cell::style::backgroundColor = "%cfff";
-		
-		}
-		console<log>(mouseDown);
-	
-	});
-	cell<addEventListener>("mouseup", $(){
-	
-		mouseDown = false;
-		console<log>(mouseDown);
-	
-	});
-	cell<addEventListener>("mouseover", $(){
-	
-		if(mouseDown){
-		
-			if(drawing)cell::style::backgroundColor = currentColor;
-			else if(erasing)cell::style::backgroundColor = "%cfff";
-		
-		}
-	
-	});
-
-}
-
-$replace(table, cell){
-
-	@cellColor = cell::style<backgroundColor>;
-	for(@r = 0; i < table::cells::length; i++){
-		
-		if(cell::style<backgroundColor> == cellColor){
-		
-			table::cells[i]::style<backgroundColor> = currentColor;
-		
-		}
-		
-	}
-
 }
