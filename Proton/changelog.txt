@@ -10,6 +10,7 @@ API for AtomScript
 
 v 0.2
 *Added Dialog API (createDialog method)
+*Pointer API
 *Added CSS API (style method and CSS method)
 	-style method adds a style to an element
 	-CSS method adds a style rule
