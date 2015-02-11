@@ -416,7 +416,12 @@ Proton<createDialog> = $(width, height, x, y, title, innerContent){
 		if(parent!=null)Proton<append>(dialog, parent);
 		else Proton<append>(dialog);
 		
-		dialog::titleBar<addEventListener>("mousedown", $(){});
+		dialog<addEventListener>("mousedown", $(){
+		
+			Proton<stats>currZIndex++;
+			Proton<style>(dialog, "zIndex", Proton::stats::currZIndex);
+			
+		});
 		
 		dialog::style<display> = "none";
 	
