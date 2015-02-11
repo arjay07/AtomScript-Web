@@ -17,4 +17,4 @@
 *.RTF	 diff=astextplain
 
 # AtomScript
-*.atom diff=javascript
+*.atom diff=java
