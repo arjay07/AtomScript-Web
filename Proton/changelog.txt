@@ -8,6 +8,10 @@
 ©ZeroSeven Interactive 2015   
 API for AtomScript
 
+v 0.2.1
+*Added element object
+*Added alert method
+
 v 0.2
 *Added Dialog API (createDialog method)
 *Pointer API

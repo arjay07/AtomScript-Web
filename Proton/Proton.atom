@@ -3,7 +3,7 @@
 #   | |__) | __ ___ | |_ ___  _ __  
 #   |  ___/ '__/ _ \| __/ _ \| '_ \ 
 #   | |   | | | (_) | || (_) | | | |
-#   |_|   |_|  \___/ \__\___/|_| |_| v0.2
+#   |_|   |_|  \___/ \__\___/|_| |_| v0.2.1
 #                                   
 #	©ZeroSeven Interactive 2015   
 #	API for AtomScript
@@ -102,7 +102,7 @@ Proton<list> = $(){
 	
 	}
 
-}
+};
 
 #Pointer
 Proton<Pointer> = {x: 0, y: 0, state: "up"};
@@ -129,13 +129,68 @@ Doc<addEventListener>("mousedown", $(){
 	Proton<Pointer>state = "down";
 
 });
+
 Doc<addEventListener>("mouseup", $(){
 
 	Proton<Pointer>state = "up";
 
 });
 
+#Runnable
+Proton<Runnable> = $(runnable){
+
+	this -> run = $(){
+	
+		runnable();
+	
+	}
+	
+	this -> waitToRun = $(ms){
+	
+		setInterval(runnable, ms);
+	
+	}
+
+}
+
 #DOM Methods
+Proton<element> = $(element){
+	
+	@dom = Doc::createElement(element);
+
+	this -> setId = $(id){
+		
+		dom::id = id;
+	
+	};
+	this -> setClass = $(aclass){
+	
+		dom::setAttribute("class", aclass);
+	
+	}
+	this -> setStyle = $(style){
+	
+		Proton<style>(dom, style);
+	
+	};
+	
+	this -> appendTo = $(element){
+	
+		Proton<append>(dom, element);
+	
+	}
+	
+	this -> append = $(element){
+
+		Proton<append>(element, dom);
+	
+	};
+	
+	this -> DOM = dom;
+	this -> HTML = dom<outterHTML>;
+
+};
+
 Proton<createButton> = $(text){
 
 	@i = Doc<createElement>("button");
@@ -160,7 +215,7 @@ Proton<createButton> = $(text){
 	
 	return i;
 
-}
+};
 
 Proton<createTextInput> = $(){
 
@@ -186,7 +241,7 @@ Proton<createTextInput> = $(){
 	
 	return i;
 
-}
+};
 
 Proton<createText> = $(text){
 
@@ -207,21 +262,21 @@ Proton<createText> = $(text){
 	
 	return i;
 
-}
+};
 
 Proton<createDiv> = $(){
 
 	@i = Doc<createElement>("div");
 	return i;
 
-}
+};
 
 Proton<append> = $(element, parent){
 
 	if(parent==null)Doc::body<appendChild>(element);
 	else parent<appendChild>(element);
 
-}
+};
 
 Proton<createTable> = $(columns, rows){
 
@@ -273,7 +328,7 @@ Proton<createTable> = $(columns, rows){
 	
 	return table;
 
-}
+};
 
 Proton<createList> = $(array, type){
 
@@ -309,7 +364,7 @@ Proton<createList> = $(array, type){
 	
 	return list;
 
-}
+};
 
 Proton<createDialog> = $(width, height, x, y, title, innerContent){
 
@@ -383,6 +438,68 @@ Proton<createDialog> = $(width, height, x, y, title, innerContent){
 	
 	return dialog;
 
+};
+
+Proton<alert> = $(alertContent, alertTitle){
+
+	@dialog = Proton<createDialog>("500px", "300px", 500, 0, alertTitle!=undefined||alertTitle!=null?alertTitle:"Proton Alert", alertContent);
+	dialog<create>();
+	
+	@btn = Proton<createButton>("Close");
+	
+	Proton<append>(btn, dialog<optionBar>);
+	
+	Proton<style>(dialog, "background-color: %ce3e3e3; border-radius: 10px;");
+	Proton<style>(dialog::titleBar, "backgroundColor", "%cc0c0c0");
+	Proton<style>(dialog::titleBar, "borderTopLeftRadius", "10px");
+	Proton<style>(dialog::titleBar, "borderTopRightRadius", "10px");
+	Proton<style>(dialog::content, "padding: 5px;");
+	Proton<style>(dialog::optionBar, "background-color: %ce3e3e3; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;");
+	
+	btn<onclick> = $(){
+	
+		dialog<close>();
+	
+	};
+	
+	dialog<show>();
+
+};
+
+Proton<confirm> = $(content, title){
+
+	@dialog = Proton<createDialog>("500px", "300px", 500, 0, title!=undefined||title!=null?title:"Proton Confirm", content);
+	dialog<create>();
+	
+	@ok = Proton<createButton>("OK");
+	@cancel = Proton<createButton>("Cancel");
+	
+	Proton<append>(ok, dialog<optionBar>);
+	Proton<append>(cancel, dialog<optionBar>);
+	
+	Proton<style>(dialog, "background-color: %ce3e3e3; border-radius: 10px;");
+	Proton<style>(dialog::titleBar, "backgroundColor", "%cc0c0c0");
+	Proton<style>(dialog::titleBar, "borderTopLeftRadius", "10px");
+	Proton<style>(dialog::titleBar, "borderTopRightRadius", "10px");
+	Proton<style>(dialog::content, "padding: 5px;");
+	Proton<style>(dialog::optionBar, "background-color: %ce3e3e3; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;");
+	
+	ok<onclick> = $(){
+	
+		dialog<close>();
+		return true;
+	
+	};
+	
+	cancel<onclick> = $(){
+	
+		dialog<close>();
+		return false;
+	
+	};
+	
+	dialog<show>();
+
 }
 
 Proton<style> = $(element, style, value){
@@ -399,7 +516,7 @@ Proton<style> = $(element, style, value){
 	
 	}
 
-}
+};
 
 Proton<CSS> = $(){
 
@@ -427,7 +544,7 @@ Proton<CSS> = $(){
 	
 	return sheet;
 
-}
+};
 
 Proton<get> = $(id, root){
 	
@@ -455,4 +572,4 @@ Proton<get> = $(id, root){
 
 	}
 	
-}
+};

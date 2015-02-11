@@ -1,0 +1,28 @@
+# List
+
+include "../../Proton/Proton.atom";
+
+@listArray;
+@unorderedList;
+@orderedList;
+
+$main(){
+
+	# Create an array of strings
+	listArray = ["List Item 1", 
+				 "List Item 2", 
+				 "List Item 3", 
+				 "List Item 4", 
+				 "List Item 5"];
+	
+	# Create unordered list (list is unordered by default)
+	unorderedList = Proton<createList>(listArray);
+	
+	# Create ordered list
+	orderedList = Proton<createList>(listArray, "ol");
+	
+	# Append all lists to the document
+	Proton<append>(unorderedList);
+	Proton<append>(orderedList);
+
+}

@@ -1,0 +1,57 @@
+# Dialog
+
+include "../../Proton/Proton.atom";
+
+@dialog;
+
+$main(){
+
+	# Create the dialog
+	dialog = Proton<createDialog>("500px", "300px", # Dialog dimensions 
+								    500, 0, 		 # Dialog starting coordinates
+									"Title", 		 # Dialog title
+									"Content Text"); # Content text
+	dialog<create>(); # Initiate the creation of the dialog
+	
+	# Create a close button
+	@close = Proton<createButton>("Close");
+	close<onclick> = $(){
+		
+		dialog<close>(); # Closes the dialog when this button is clicked
+	
+	};
+	
+	# Add the close button the option bar
+	Proton<append>(close, dialog::optionBar);
+	
+	# Create a button that opens the dialog
+	@open = Proton<createButton>("Open");
+	open<onclick> = $(){
+		
+		dialog<show>();
+	
+	}
+	
+	# Style the dialog
+	styleDialog(dialog);
+	
+	# Add the open button to the document
+	Proton<append>(open);
+
+}
+
+# Method to style the dialog
+$styleDialog(dialog){
+
+	# Refers to all dialog components
+	@titleBar = dialog<titleBar>;
+	@content = dialog<content>;
+	@optionBar = dialog<optionBar>;
+	
+	# Style the dialog and its components
+	Proton<style>(dialog, "background-color: %ce3e3e3; box-shadow: 0px 5px 25px rgba(0, 0, 0, 0.5);");
+	Proton<style>(titleBar, "background-color: %cb3b3b3; text-align: center;");
+	Proton<style>(content, "padding: 5px'");
+	Proton<style>(optionBar, "background-color: %cd0d0d0;");
+
+}

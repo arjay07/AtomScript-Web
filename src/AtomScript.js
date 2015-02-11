@@ -79,6 +79,9 @@ function onLoad(){
 
 function parseCode(){
 
+	removeComments();
+	includeFiles();
+	includeFiles();
 	includeFiles();
 	convertVariables();
 	convertMethods();

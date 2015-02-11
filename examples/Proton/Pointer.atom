@@ -1,0 +1,31 @@
+# Pointer
+
+include "../../Proton/Proton.atom";
+
+@pointer;
+@x;
+@y;
+@state;
+
+$main(){
+
+	# Data Display
+	@data = Proton<createText>("x: 0, y: 0, state: up");
+	
+	# Refer to the pointer
+	pointer = Proton<Pointer>;
+
+	Doc::onmousemove = $(){
+	
+		# All the object properties are the displayed
+		x = pointer<x>;
+		y = pointer<y>;
+		state = pointer<state>;
+		data<setText>("x: " + x + " y: " + y + " state: " + state);
+	
+	}
+	
+	# Data display is shown on screen
+	Proton<append>(data);
+
+}

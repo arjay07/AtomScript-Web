@@ -43,9 +43,14 @@ $main(){
 	
 	});
 	
+	Proton::get(":alert")::addEventListener("click", $(){
+	
+		Proton<alert>(AtomScript.CODE, "AtomScript Code");
+	
+	});
+	
 	CSSObj = Proton<CSS>();
 	CSSObj<add>("body", "background-color: %cff0230;");
-	#CSSObj<add>("div", "box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);");
 
 }
 
@@ -137,8 +142,12 @@ $createDialog3(){
 
 $createDialog4(){
 
-	@dialog = Proton::createDialog("500px", "300px", 0, 0, "Empty Dialog", " <strong>NO CONTENT </strong>");
+	@dialog = Proton::createDialog("500px", "300px", 0, 0, "Empty Dialog", "NO CONTENT");
 	dialog<create>();
+	
+	Proton<style>(dialog, "background-color: %c00ffff; border-radius: 25px");
+	Proton<style>(dialog::titleBar, "background-color: rgba(0, 0, 0, 0.15)");
+	
 	return dialog;
 	
 }
