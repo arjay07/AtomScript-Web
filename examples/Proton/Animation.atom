@@ -10,7 +10,7 @@ $main(){
 
 	# Style the basic block
 	animatedBlock = Proton<createDiv>();
-	Proton<style>(animatedBlock, "border: solid 2px black; border-radius: 128px; width: 256px; height: 256px; position: absolute;"); # Made a circle using border-radius :)
+	Proton<style>(animatedBlock, "border: solid 5px black; border-radius: 128px; width: 256px; height: 256px; position: absolute;"); # Made a circle using border-radius :)
 	Proton<append>(animatedBlock);
 
 	# Create the keyframes
