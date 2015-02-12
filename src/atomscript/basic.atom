@@ -1,7 +1,0 @@
-#AtomScript Basic Library
-#Includes basic script objects
-
-@basic = {};
-
-basic::array<prototype> = Array<prototype>;
-

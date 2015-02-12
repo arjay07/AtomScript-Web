@@ -1,0 +1,38 @@
+# Animations
+
+include "../../Proton/Proton.atom";
+
+@animation;
+@keyframes;
+@animatedBlock;
+
+$main(){
+
+	# Style the basic block
+	animatedBlock = Proton<createDiv>();
+	Proton<style>(animatedBlock, "border: solid 2px black; border-radius: 128px; width: 256px; height: 256px; position: absolute;"); # Made a circle using border-radius :)
+	Proton<append>(animatedBlock);
+
+	# Create the keyframes
+	keyframes = [
+	
+		"background-color: red; top: 5px; left: 5px;",
+		
+		"background-color: green; top: 5px; left: 500px;",
+		
+		"background-color: blue; top: 500px; left: 500px;",
+		
+		"background-color: yellow; top: 500px; left: 5px;",
+		
+		"background-color: red; top: 5px; left: 5px;"
+	
+	];
+	
+	# Create the animation
+	animation = *Proton<Animation>("testAnimation", keyframes, "5s");
+	animation<create>();
+	
+	# Apply it to the block
+	animation<apply>(animatedBlock);
+
+}

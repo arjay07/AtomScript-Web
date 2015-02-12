@@ -8,6 +8,11 @@
 ©ZeroSeven Interactive 2015   
 API for AtomScript
 
+v 0.2.5
+*Added String Builder
+*Added Animation API
+*Added Runnable object
+
 v 0.2.1
 *Added element object
 *Added alert method

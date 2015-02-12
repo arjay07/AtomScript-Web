@@ -4,7 +4,7 @@
  *        /  \    | |_    ___    _ __ ___   | (___     ___   _ __   _   _ __   | |_ 
  *       / /\ \   | __|  / _ \  | '_ ` _ \   \___ \   / __| | '__| | | | '_ \  | __|
  *      / ____ \  | |_  | (_) | | | | | | |  ____) | | (__  | |    | | | |_) | | |_ 
- *     /_/    \_\  \__|  \___/  |_| |_| |_| |_____/   \___| |_|    |_| | .__/   \__| v0.5.4
+ *     /_/    \_\  \__|  \___/  |_| |_| |_| |_____/   \___| |_|    |_| | .__/   \__| v0.5.4.1
  *                                                                     | |          
  *                                                                     |_|          
  *
@@ -24,7 +24,7 @@ var CURRENT_SRC_DIR;
 
 function onLoad(){
 
-	console.log("%cAtomScript v0.5.4", "color: #0355ff; font-family: arial; font-size: 20px;");
+	console.log("%cAtomScript v0.5.4.1", "color: #0355ff; font-family: arial; font-size: 20px;");
 	console.log("%c©ZeroSeven Interactive 2015", "color: #ff0330; font-family: arial;");
 
 	if(AtomScript.src != null && AtomScript.src.endsWith(".atom")){
@@ -90,6 +90,7 @@ function parseCode(){
 	convertNameSpaceSplitters();
 	convertObjectPropertyNameCaller();
 	convertObjectPropertyCaller();
+	convertEscapes();
 	removeComments();
 	convertColor();
 
@@ -131,7 +132,7 @@ function convertMethods(){
 
 function convertObjects(){
 
-	var matches = code.match(/\*\w\D\S[^;]+/g);
+	var matches = code.match(/\*[^0-9;\s ]+/g);
 	
 	if(matches != null)
 	
@@ -202,6 +203,12 @@ function convertColor(){
 
 }
 
+function convertEscapes(){
+
+	code = code.replace(/%evar /g, "@").replace(/%efunction /g, "$").replace(/%e#/g, "#");
+
+}
+
 function includeFiles(){
 
 	var matches = code.match(/include[^;]+;/g);
@@ -210,7 +217,7 @@ function includeFiles(){
 	
 		for(var i = 0; i < matches.length; i++){
 			
-			if(AtomScript.src.endsWith(".atom")){
+			if(AtomScript.src.endsWith(".atom") && !AtomScript.src.startsWith("#")){
 
 				var match = matches[i];
 				var includer = match.split(" ")[1];

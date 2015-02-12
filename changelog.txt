@@ -11,6 +11,10 @@
 ©ZeroSeven Interactive 2015
 AtomScript is an interpreted programming language. The language is translated into JavaScript. 
 
+v 0.5.4.1
+*Added examples
+*Added symbol escapes
+
 v 0.5.4
 *Updated test files
 *Added Proton (Library/Framework)
