@@ -10,29 +10,52 @@ $main(){
 
 	# Style the basic block
 	animatedBlock = Proton<createDiv>();
-	Proton<style>(animatedBlock, "border: solid 5px black; border-radius: 128px; width: 256px; height: 256px; position: absolute;"); # Made a circle using border-radius :)
+	Proton<style>(animatedBlock, "border: solid 5px black; border-radius: 128px; width: 256px; height: 256px; position: relative; background-color: red; color: white; text-align: center; font-family: arial; font-size: 20px;"); # Made a circle using border-radius :)
+	animatedBlock::innerHTML = "<h1 style = 'margin: auto; margin-top: 85px;'>" + "AtomScript Animations" + "</h1>";
 	Proton<append>(animatedBlock);
 
 	# Create the keyframes
 	keyframes = [
 	
-		"background-color: red; top: 5px; left: 5px;",
+		"background-color: red; top: 5px; left: 5px; opacity: 1;",
 		
-		"background-color: green; top: 5px; left: 500px;",
+		"background-color: green; top: 5px; left: 500px; opacity: 0.5;",
 		
-		"background-color: blue; top: 500px; left: 500px;",
-		
-		"background-color: yellow; top: 500px; left: 5px;",
-		
-		"background-color: red; top: 5px; left: 5px;"
+		"background-color: blue; top: 5px; left: 1000px; opacity: 0;"
 	
 	];
 	
 	# Create the animation
-	animation = *Proton<Animation>("testAnimation", keyframes, "5s");
-	animation<create>();
+	#animation = *Proton<Animation>("testAnimation", keyframes, "5s", 1);
+	#animation<create>();]]
 	
-	# Apply it to the block
-	animation<apply>(animatedBlock);
+	animation = Proton::Animation<wobble>;
+	animation<iteration> = "infinite";
+	
+	# Add start button (plays and pauses animation)
+	@startBtn = Proton<createButton>("Play");
+	Proton<append>(startBtn);
+	startBtn<onclick> = $(){
+		
+		if(animation<playState> == "running"){
+			animation<pause>(animatedBlock);
+			startBtn<setText>("Play");
+		}
+		else if(animation<playState> == "paused"){
+			animation<play>(animatedBlock);
+			startBtn<setText>("Pause");
+		}
+	
+	};
+	
+	# Add restart button
+	@restartBtn = Proton<createButton>("Restart");
+	Proton<append>(restartBtn);
+	restartBtn<onclick> = $(){
+		
+		@cloned = Proton<clone>(animatedBlock);
+		Proton<replace>(animatedBlock, (animatedBlock = cloned));
+	
+	};
 
 }
