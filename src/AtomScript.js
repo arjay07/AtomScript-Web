@@ -81,8 +81,6 @@ function parseCode(){
 
 	removeComments();
 	includeFiles();
-	includeFiles();
-	includeFiles();
 	convertVariables();
 	convertMethods();
 	convertObjects();

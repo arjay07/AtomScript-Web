@@ -1,0 +1,374 @@
+#    _____           _              
+#   |  __ \         | |             
+#   | |__) | __ ___ | |_ ___  _ __  
+#   |  ___/ '__/ _ \| __/ _ \| '_ \ 
+#   | |   | | | (_) | || (_) | | | |
+#   |_|   |_|  \___/ \__\___/|_| |_| Ui v0.1
+#                                   
+#	©ZeroSeven Interactive 2015   
+#	API for AtomScript
+# 
+
+# DOM
+
+Proton<element> = $(element){
+	
+	@dom = Doc::createElement(element);
+
+	this -> setId = $(id){
+		
+		dom::id = id;
+	
+	};
+	this -> setClass = $(aclass){
+	
+		dom::setAttribute("class", aclass);
+	
+	}
+	this -> setStyle = $(style){
+	
+		Proton<style>(dom, style);
+	
+	};
+	
+	this -> appendTo = $(element){
+	
+		Proton<append>(dom, element);
+	
+	}
+	
+	this -> append = $(element){
+
+		Proton<append>(element, dom);
+	
+	};
+	
+	this -> DOM = dom;
+	this -> HTML = dom<outterHTML>;
+
+};
+
+Proton<createButton> = $(text){
+
+	@i = Doc<createElement>("button");
+	i<innerHTML> = text;
+	i<onClick> = $(onclick){
+	
+		i<onclick> = onclick;
+	
+	};
+	
+	i<setText> = $(t){
+	
+		i<innerHTML> = t;
+	
+	}
+	
+	i<getText> = $(){
+	
+		return i<innerHTML>;
+		
+	}
+	
+	return i;
+
+};
+
+Proton<createTextInput> = $(){
+
+	@i = document<createElement>("input");
+	i<type> = "text";
+	i<onKeyPress> = $(onpress){
+	
+		i<addEventListener>("keydown", onpress);
+	
+	};
+	
+	i<setText> = $(t){
+	
+		i<value> = t;
+	
+	}
+	
+	i<getText> = $(){
+	
+		return i<value>;
+		
+	}
+	
+	return i;
+
+};
+
+Proton<createText> = $(text){
+
+	@i = document<createElement>("span");
+	i<innerText> = text;
+	
+	i<setText> = $(t){
+		
+		i.innerHTML = t;
+	
+	}
+	
+	i<getText> = $(){
+	
+		return i<innerText>;
+	
+	}
+	
+	return i;
+
+};
+
+Proton<createDiv> = $(){
+
+	@i = Doc<createElement>("div");
+	return i;
+
+};
+
+Proton<createTable> = $(columns, rows){
+
+	@table = Doc<createElement>("table");
+	table<table> = [];
+	table<size> = 0;
+	table<columnCount> = columns;
+	table<rowCount> = rows;
+	table<cells> = [];
+	
+	for(@i = 0; i < rows; i++){
+	
+		@row = Doc<createElement>("tr");
+		@rowArray = [];
+		
+		for(@a = 0; a < columns; a++){
+
+			@data = Doc<createElement>("td");
+			Proton<append>(data, row);
+			rowArray<push>(data);
+			table::cells<push>(data);
+			table<size>++;
+
+		}
+		
+		Proton<append>(row, table);
+		table::table<push>(rowArray);
+	
+	}
+	
+	table<getCell> = $(x, y){
+	
+		@cell = table<table>[x][y];
+		return cell;
+	
+	}
+	
+	table<applyToCells> = $(applier){
+	
+		for(@r = 0; r < table::rowCount; r++)
+			for(@c = 0; c < table::columnCount; c++){
+			
+				@cell = table<getCell>(r, c);
+				applier(cell);
+			
+			}
+	
+	}
+	
+	return table;
+
+};
+
+Proton<createList> = $(array, type){
+
+	@list;
+
+	if(type == 0 || type == "ul" || type == null){
+	
+		list = Doc<createElement>("ul");
+	
+	}else if(type == 1 || type == "ol"){
+	
+		list = Doc<createElement>("ol");
+	
+	}
+
+	for(@i = 0; i < array::length; i++){
+	
+		el = array[i];
+		@item = Doc<createElement>("li");
+		if(el.constructor == String || el.constructor == Number){
+			
+			item<innerHTML> = el;
+		
+		}else{
+			
+			item<innerHTML> = el;
+		
+		}
+		
+		Proton<append>(item, list);
+	
+	}
+	
+	return list;
+
+};
+
+# Dialogs
+
+Proton<createDialog> = $(width, height, x, y, title, innerContent){
+
+	@dialog = Proton<createDiv>();
+	@titleBar = Proton<createDiv>();
+	@content = Proton<createDiv>();
+	@optionBar = Proton<createDiv>();
+	
+	dialog::style<width> = width;
+	dialog::style<height> = height;
+	Proton<style>(dialog, "position", "absolute");
+	Proton<style>(dialog, "left", x.constructor===String?x:x + "px");
+	Proton<style>(dialog, "top", y.constructor===String?y:y + "px");
+	Proton<style>(dialog, "margin", 0);
+	Proton<style>(dialog, "padding", 0);
+	#Proton<style>(dialog, "-moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -o-user-select: none; user-select: none;");
+	
+	dialog<parent> = Doc::body;
+	
+	titleBar<innerHTML> = "<h2>" + title + "</h2>";
+	Proton<style>(titleBar, "cursor: move; position: absolute; top: 0; left: 0; width: 100%; display: block; height: 20%;-moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -o-user-select: none; user-select: none;");
+	
+	content<innerHTML> = innerContent;
+	Proton<style>(content, "position: relative; top: 20%; left: 0; width: 98%; height: 60%; display: block; overflow: auto;");
+	
+	Proton<style>(optionBar, "position: relative; top: 20%; left: 0; width: 100%; height: 20%; display: block; text-align: center;-moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -o-user-select: none; user-select: none;");
+	
+	Proton<append>(titleBar, dialog);
+	Proton<append>(content, dialog);
+	Proton<append>(optionBar, dialog);
+	
+	dialog<titleBar> = titleBar;
+	dialog<content> = content;
+	dialog<optionBar> = optionBar;
+	
+	titleBar<onmousemove> = $(){
+	
+		if(Proton<Pointer>state == "down"){
+		
+			@pointerX = Proton::Pointer::x - parseInt(width::replace("px", ""))/2;
+			@pointerY = Proton::Pointer::y - parseInt(height::replace("px", "")) + parseInt(height::replace("px", "")) - parseInt(titleBar::style::height::replace("px", ""));
+				
+			Proton<style>(dialog, "left", pointerX + "px");
+			Proton<style>(dialog, "top", pointerY + "px");
+
+		}
+	
+	}
+	
+	dialog<create> = $(parent){
+	
+		if(parent!=null || parent!=undefined)Proton<append>(dialog, parent);
+		else Proton<append>(dialog);
+		
+		dialog<addEventListener>("mousedown", $(){
+		
+			Proton<stats>currZIndex++;
+			Proton<style>(dialog, "zIndex", Proton::stats::currZIndex);
+			
+		});
+		
+		dialog::style<display> = "none";
+		if(parent != undefined || parent != null)dialog<parent> = parent;
+	
+	}
+	
+	dialog<show> = $(){
+	
+		dialog::style<display> = "block";
+		Proton<stats>currZIndex++;
+		Proton<style>(dialog, "zIndex", Proton::stats::currZIndex);
+	
+	}
+	
+	dialog<dismiss> = $(){
+	
+		dialog::style<display> = "none";
+	
+	}
+	
+	dialog<close> = $(){
+	
+		Proton<remove>(dialog);
+	
+	}
+	
+	return dialog;
+
+};
+
+Proton<alert> = $(alertContent, alertTitle, parent){
+
+	@dialog = Proton<createDialog>("500px", "300px", "35%", 0, alertTitle!=undefined||alertTitle!=null?alertTitle:"Proton Alert", alertContent);
+	dialog<create>(parent);
+	
+	@btn = Proton<createButton>("Close");
+	
+	Proton<append>(btn, dialog<optionBar>);
+	
+	Proton<style>(dialog, "background-color: %ce3e3e3; border-radius: 10px;");
+	Proton<style>(dialog::titleBar, "backgroundColor", "%cc0c0c0");
+	Proton<style>(dialog::titleBar, "borderTopLeftRadius", "10px");
+	Proton<style>(dialog::titleBar, "borderTopRightRadius", "10px");
+	Proton<style>(dialog::content, "padding: 5px;");
+	Proton<style>(dialog::optionBar, "background-color: %ce3e3e3; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;");
+	
+	btn<onclick> = $(){
+	
+		dialog<close>();
+	
+	};
+	
+	dialog<show>();
+	
+	return dialog;
+
+};
+
+Proton<confirm> = $(content, title){
+
+	@dialog = Proton<createDialog>("500px", "35%", 500, 0, title!=undefined||title!=null?title:"Proton Confirm", content);
+	dialog<create>();
+	
+	@ok = Proton<createButton>("OK");
+	@cancel = Proton<createButton>("Cancel");
+	
+	Proton<append>(ok, dialog<optionBar>);
+	Proton<append>(cancel, dialog<optionBar>);
+	
+	Proton<style>(dialog, "background-color: %ce3e3e3; border-radius: 10px;");
+	Proton<style>(dialog::titleBar, "backgroundColor", "%cc0c0c0");
+	Proton<style>(dialog::titleBar, "borderTopLeftRadius", "10px");
+	Proton<style>(dialog::titleBar, "borderTopRightRadius", "10px");
+	Proton<style>(dialog::content, "padding: 5px;");
+	Proton<style>(dialog::optionBar, "background-color: %ce3e3e3; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;");
+	
+	ok<onclick> = $(){
+	
+		dialog<close>();
+		return true;
+	
+	};
+	
+	cancel<onclick> = $(){
+	
+		dialog<close>();
+		return false;
+	
+	};
+	
+	dialog<show>();
+	
+	return dialog;
+
+}

@@ -8,13 +8,25 @@
 ©ZeroSeven Interactive 2015   
 API for AtomScript
 
+v0.2.6.2
+*Split Proton into three modules
+	-Proton, ProtonUi, ProtonAnimation
+	-Main Proton module is required to use sub-modules
+*Added prepend method
+*Added localize method
+	-Localizes methods and variables to another object (Proton::createButton -> createButton)
+*Added more animations (bounceIn, bounceOut)
+	-Renamed fadein to fadeIn and fadeout to fadeOut (just making that clear)
+*Fixed some bugs involving using null instead of undefined
+*Fixed Runnable object
+
 v 0.2.6
 *Added remove element method
 *Added replace element method
 *Added clone element method
 *Added play and pause methods to Animation API
 *Added built in animations (Based off of Animate.css)
-*Added multiply function (if you're having trouble with the asterisk)
+*Added multiply method (if you're having trouble with the asterisk)
 
 v 0.2.5
 *Added String Builder

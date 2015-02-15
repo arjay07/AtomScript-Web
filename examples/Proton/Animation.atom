@@ -1,61 +1,63 @@
 # Animations
 
 include "../../Proton/Proton.atom";
-
-@animation;
-@keyframes;
-@animatedBlock;
+include "../../Proton/ProtonUi.atom";
+include "../../Proton/ProtonAnimation.atom";
 
 $main(){
 
-	# Style the basic block
-	animatedBlock = Proton<createDiv>();
-	Proton<style>(animatedBlock, "border: solid 5px black; border-radius: 128px; width: 256px; height: 256px; position: relative; background-color: red; color: white; text-align: center; font-family: arial; font-size: 20px;"); # Made a circle using border-radius :)
-	animatedBlock::innerHTML = "<h1 style = 'margin: auto; margin-top: 85px;'>" + "AtomScript Animations" + "</h1>";
-	Proton<append>(animatedBlock);
+	Proton<localize>(Proton, this);
+	
+	console<log>(createButton);
 
-	# Create the keyframes
-	keyframes = [
+	@dialog = Proton<alert>("This is an alert dialog!", "Alert Dialog");
+	Animation::bounceIn<play>(dialog);
 	
-		"background-color: red; top: 5px; left: 5px; opacity: 1;",
+	dialog::optionBar::children[0]::onclick = $(){
+	
+		@bounceOut = Proton::Animation::bounceOut;
+		bounceOut<duration> = ".5s";
+		bounceOut<play>(dialog);
+	
+		@closeRunnable = *Proton<Runnable>({
+			
+			run: $(){
+			
+				dialog<close>();
+			
+			}
 		
-		"background-color: green; top: 5px; left: 500px; opacity: 0.5;",
+		});
+			
+		closeRunnable<waitToRun>(490);
+	
+	}
+	
+	get(":animatedBlock")::onclick = $(){
+	
+		@dialog = Proton<alert>("This is an alert dialog!");
+		Proton::Animation::bounceIn<play>(dialog);
 		
-		"background-color: blue; top: 5px; left: 1000px; opacity: 0;"
+		dialog::optionBar::children[0]::onclick = $(){
 	
-	];
+			@bounceOut = Proton::Animation::bounceOut;
+			bounceOut<duration> = ".5s";
+			bounceOut<play>(dialog);
 	
-	# Create the animation
-	#animation = *Proton<Animation>("testAnimation", keyframes, "5s", 1);
-	#animation<create>();]]
+			@closeRunnable = *Proton<Runnable>({
+			
+				run: $(){
+				
+					dialog<close>();
+				
+				}
+			
+			});
+			
+			closeRunnable<waitToRun>(490);
 	
-	animation = Proton::Animation<wobble>;
-	animation<iteration> = "infinite";
-	
-	# Add start button (plays and pauses animation)
-	@startBtn = Proton<createButton>("Play");
-	Proton<append>(startBtn);
-	startBtn<onclick> = $(){
-		
-		if(animation<playState> == "running"){
-			animation<pause>(animatedBlock);
-			startBtn<setText>("Play");
 		}
-		else if(animation<playState> == "paused"){
-			animation<play>(animatedBlock);
-			startBtn<setText>("Pause");
-		}
-	
-	};
-	
-	# Add restart button
-	@restartBtn = Proton<createButton>("Restart");
-	Proton<append>(restartBtn);
-	restartBtn<onclick> = $(){
 		
-		@cloned = Proton<clone>(animatedBlock);
-		Proton<replace>(animatedBlock, (animatedBlock = cloned));
+	}
 	
-	};
-
 }
