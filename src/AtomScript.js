@@ -18,7 +18,6 @@ window.onload = onLoad;
 var AtomScript = {src: null, consolePath: "AtomScript/console/main.html", startConsole: false, CODE: "", Proton: true};
 var Console = {};
 
-var code = "";
 var CURRENT_SRC;
 var CURRENT_SRC_DIR;
 
@@ -34,8 +33,8 @@ function onLoad(){
 
 		setScript(AtomScript.src);
 		parseCode();
-		//console.log(code);
-		eval(code + "if(main)main();");
+		//console.log(AtomScript.CODE);
+		eval(AtomScript.CODE + "if(main)main();");
 	
 	}else if(AtomScript.src != null && AtomScript.src.startsWith("#")){
 
@@ -44,9 +43,9 @@ function onLoad(){
 		
 		if(script.getAttribute("type") == "AtomScript"){
 
-			code = script.innerHTML;
+			AtomScript.CODE = script.innerHTML;
 			parseCode();
-			eval(code + "if(main){ if(AtomScript.startConsole)Console.start(); main(); }");
+			eval(AtomScript.CODE + "if(main){ if(AtomScript.startConsole)Console.start(); main(); }");
 
 		}else{
 
@@ -65,7 +64,7 @@ function onLoad(){
 			
 			if(script.getAttribute("type") == "AtomScript" || script.getAttribute("type") == "text/AtomScript"){
 
-				code = script.innerHTML;
+				AtomScript.CODE = script.innerHTML;
 
 			}
 
@@ -73,7 +72,7 @@ function onLoad(){
 
 	}
 
-	AtomScript.CODE = code;
+	AtomScript.CODE = AtomScript.CODE;
 
 }
 
@@ -96,19 +95,19 @@ function parseCode(){
 
 function removeComments(){
 
-	code = code.replace(/\B\#[^\n]+\n/g, "");
+	AtomScript.CODE = AtomScript.CODE.replace(/\B\#[^\n]+\n/g, "");
 
 }
 
 function convertVariables(){
 
-	var matches = code.match(/\B@\w+/g);
+	var matches = AtomScript.CODE.match(/\B@\w+/g);
 	
 	if(matches != null)
 	
 	for(var i = 0; i < matches.length; i++){
 	
-		code = code.replace(matches[i].substring(0, 1), "var ");
+		AtomScript.CODE = AtomScript.CODE.replace(matches[i].substring(0, 1), "var ");
 	
 	}
 
@@ -116,13 +115,13 @@ function convertVariables(){
 
 function convertMethods(){
 
-	var matches = code.match(/\$\w+|\$\(/g);
+	var matches = AtomScript.CODE.match(/\$\w+|\$\(/g);
 	
 	if(matches != null)
 	
 	for(var i = 0; i < matches.length; i++){
 	
-		code = code.replace(matches[i].substring(0, 1), "function ");
+		AtomScript.CODE = AtomScript.CODE.replace(matches[i].substring(0, 1), "function ");
 	
 	}
 
@@ -130,13 +129,13 @@ function convertMethods(){
 
 function convertObjects(){
 
-	var matches = code.match(/\*[^0-9;\s ]+/g);
+	var matches = AtomScript.CODE.match(/\*[^0-9;\s ]+/g);
 	
 	if(matches != null)
 	
 		for(var i = 0; i < matches.length; i++){
 		
-			code = code.replace(matches[i].substring(0, 1), "new ");
+			AtomScript.CODE = AtomScript.CODE.replace(matches[i].substring(0, 1), "new ");
 		
 		}
 
@@ -144,19 +143,19 @@ function convertObjects(){
 
 function convertObjectProperties(){
 
-	code = code.replace(/this ->|this->|this-> |this -> /g, "this.");
+	AtomScript.CODE = AtomScript.CODE.replace(/this ->|this->|this-> |this -> /g, "this.");
 
 }
 
 function convertNameSpaceSplitters(){
 
-	var matches = code.match(/::/g);
+	var matches = AtomScript.CODE.match(/::/g);
 
 	if(matches != null)
 
 		for(var i = 0; i < matches.length; i++){
 
-			code = code.replace(matches[i], ".");
+			AtomScript.CODE = AtomScript.CODE.replace(matches[i], ".");
 
 		}
 
@@ -164,7 +163,7 @@ function convertNameSpaceSplitters(){
 
 function convertObjectPropertyCaller(){
 
-	var matches = code.match(/\b\<(.+?)\>/g);
+	var matches = AtomScript.CODE.match(/\b\<(.+?)\>/g);
 
 	if(matches != null)
 		for(var i = 0; i < matches.length; i++){
@@ -172,7 +171,7 @@ function convertObjectPropertyCaller(){
 			var match = matches[i];
 			var propname = match.substring(1, match.length-1);
 
-			code = code.replace(match, "." + propname);
+			AtomScript.CODE = AtomScript.CODE.replace(match, "." + propname);
 
 		}
 
@@ -180,7 +179,7 @@ function convertObjectPropertyCaller(){
 
 function convertObjectPropertyNameCaller(){
 
-	var matches = code.match(/\b\<(.+?)\> \w+|\<(.+?)\>\w+/g);
+	var matches = AtomScript.CODE.match(/\b\<(.+?)\> \w+|\<(.+?)\>\w+/g);
 
 	if(matches != null)
 		for(var i = 0; i < matches.length; i++){
@@ -189,7 +188,7 @@ function convertObjectPropertyNameCaller(){
 			var propname = match.substring(1, match.indexOf(">"));
 			var other = match.split(/\>/g)[1];
 
-			code = code.replace(match, "." + propname + "." + other);
+			AtomScript.CODE = AtomScript.CODE.replace(match, "." + propname + "." + other);
 
 		}
 
@@ -197,19 +196,19 @@ function convertObjectPropertyNameCaller(){
 
 function convertColor(){
 
-	code = code.replace(/%c/g, "#");
+	AtomScript.CODE = AtomScript.CODE.replace(/%c/g, "#");
 
 }
 
 function convertEscapes(){
 
-	code = code.replace(/%evar /g, "@").replace(/%efunction /g, "$").replace(/%e#/g, "#");
+	AtomScript.CODE = AtomScript.CODE.replace(/%evar /g, "@").replace(/%efunction /g, "$").replace(/%e#/g, "#");
 
 }
 
 function includeFiles(){
 
-	var matches = code.match(/include[^;]+;/g);
+	var matches = AtomScript.CODE.match(/include[^;]+;/g);
 	
 	if(matches != null)
 	
@@ -223,7 +222,7 @@ function includeFiles(){
 				if(file.endsWith(".atom")){
 
 					var read = readFile(file).text;
-					code = code.replace(match, read);
+					AtomScript.CODE = AtomScript.CODE.replace(match, read);
 
 				}
 
@@ -234,12 +233,12 @@ function includeFiles(){
 				if(file.endsWith(".atom")){
 
 					var read = readFile(file).text;
-					code = code.replace(match, read);
+					AtomScript.CODE = AtomScript.CODE.replace(match, read);
 
 				}else{
 
 					var read = readFile(file + ".atom").text;
-					code = code.replace(match, read);
+					AtomScript.CODE = AtomScript.CODE.replace(match, read);
 
 				}
 
@@ -282,7 +281,7 @@ function readFile(file){
 
 function setScript(file){
 
-	code = readFile(file).text;
+	AtomScript.CODE = readFile(file).text;
 
 }
 
@@ -320,6 +319,34 @@ if (!String.prototype.startsWith) {
       return this.lastIndexOf(searchString, position) === position;
     }
   });
+}
+
+if (![].includes) {
+  Array.prototype.includes = function(searchElement /*, fromIndex*/ ) {'use strict';
+    var O = Object(this);
+    var len = parseInt(O.length) || 0;
+    if (len === 0) {
+      return false;
+    }
+    var n = parseInt(arguments[1]) || 0;
+    var k;
+    if (n >= 0) {
+      k = n;
+    } else {
+      k = len + n;
+      if (k < 0) {k = 0;}
+    }
+    var currentElement;
+    while (k < len) {
+      currentElement = O[k];
+      if (searchElement === currentElement ||
+         (searchElement !== searchElement && currentElement !== currentElement)) {
+        return true;
+      }
+      k++;
+    }
+    return false;
+  };
 }
 
 /***
