@@ -185,7 +185,7 @@ Proton<Thread> = $(runnable){
 
 	this -> start = $(){
 	
-		@interval = setInterval();
+		@interval = setInterval($(){runnable();});
 	
 	}
 
