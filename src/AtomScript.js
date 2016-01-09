@@ -224,6 +224,11 @@ function includeFiles(){
 					var read = readFile(file).text;
 					AtomScript.CODE = AtomScript.CODE.replace(match, read);
 
+				}else if(file.startsWith("http://") && file.endsWith(".atom")){
+					
+					var read = readFile(file).text;
+					AtomScript.CODE = AtomScript.CODE.replace(match, read);
+					
 				}
 
 			}else if(AtomScript.src.startsWith("#")){
@@ -235,6 +240,11 @@ function includeFiles(){
 					var read = readFile(file).text;
 					AtomScript.CODE = AtomScript.CODE.replace(match, read);
 
+				}else if(file.startsWith("http://") && file.endsWith(".atom")){
+					
+					var read = readFile(file).text;
+					AtomScript.CODE = AtomScript.CODE.replace(match, read);
+					
 				}else{
 
 					var read = readFile(file + ".atom").text;
