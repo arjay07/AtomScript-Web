@@ -8,6 +8,12 @@
 ©ZeroSeven Interactive 2015   
 API for AtomScript
 
+v0.3
+*Proton Widgets
+	-Proton widgets allows you create individual HTML files and turn them into appendable widgets. You
+	can place them anywhere on your page as if they were an element on their own.
+*Fixed Thread not running.
+
 v0.2.6.2
 *Split Proton into three modules
 	-Proton, ProtonUi, ProtonAnimation
