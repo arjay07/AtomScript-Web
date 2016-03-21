@@ -48,10 +48,25 @@ Proton<element> = $(element){
 
 };
 
+Proton<widget> = $(path, id){
+
+	this -> path = path;
+	this -> code = readFile(path)::text;
+	this -> url = readFile(path)::url;
+	
+	@widget = Doc::createElement("div");
+	if(id != null || id != undefined)widget<setAttribute>("id", id);
+	widget<innerHTML> = this -> code;
+	
+	return widget;
+
+}
+
 Proton<createButton> = $(text){
 
-	@i = Doc<createElement>("button");
-	i<innerHTML> = text;
+	@i = Doc<createElement>("input");
+	i<type> = "button";
+	i<value> = text;
 	i<onClick> = $(onclick){
 	
 		i<onclick> = onclick;
@@ -160,6 +175,8 @@ Proton<createTable> = $(columns, rows){
 	table<getCell> = $(x, y){
 	
 		@cell = table<table>[x][y];
+		cell<x> = y;
+		cell<y> = x;
 		return cell;
 	
 	}
