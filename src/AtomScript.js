@@ -15,7 +15,12 @@
 
 window.onload = onLoad;
 
-var AtomScript = {src: null, consolePath: "AtomScript/console/main.html", startConsole: false, CODE: "", Proton: true};
+var AtomScript = {	src: null, 
+					consolePath: "AtomScript/console/main.html", 
+					startConsole: false, 
+					CODE: "", 
+					Proton: true
+				};
 var Console = {};
 
 var CURRENT_SRC;
@@ -103,12 +108,12 @@ function convertVariables(){
 
 	var matches = AtomScript.CODE.match(/\B@\w+/g);
 	
-	if(matches != null)
+	if(matches != null){
 	
-	for(var i = 0; i < matches.length; i++){
+		for(var i = 0; i < matches.length; i++){
 	
-		AtomScript.CODE = AtomScript.CODE.replace(matches[i].substring(0, 1), "var ");
-	
+			AtomScript.CODE = AtomScript.CODE.replace(matches[i].substring(0, 1), "var ");
+		}
 	}
 
 }
@@ -117,12 +122,12 @@ function convertMethods(){
 
 	var matches = AtomScript.CODE.match(/\$\w+|\$\(/g);
 	
-	if(matches != null)
+	if(matches != null){
 	
-	for(var i = 0; i < matches.length; i++){
+		for(var i = 0; i < matches.length; i++){
 	
-		AtomScript.CODE = AtomScript.CODE.replace(matches[i].substring(0, 1), "function ");
-	
+			AtomScript.CODE = AtomScript.CODE.replace(matches[i].substring(0, 1), "function ");
+		}
 	}
 
 }
@@ -131,14 +136,14 @@ function convertObjects(){
 
 	var matches = AtomScript.CODE.match(/\*[^0-9;\s ]+/g);
 	
-	if(matches != null)
+	if(matches != null){
 	
 		for(var i = 0; i < matches.length; i++){
 		
 			AtomScript.CODE = AtomScript.CODE.replace(matches[i].substring(0, 1), "new ");
 		
 		}
-
+	}
 }
 
 function convertObjectProperties(){
@@ -151,21 +156,21 @@ function convertNameSpaceSplitters(){
 
 	var matches = AtomScript.CODE.match(/::/g);
 
-	if(matches != null)
+	if(matches != null){
 
 		for(var i = 0; i < matches.length; i++){
 
 			AtomScript.CODE = AtomScript.CODE.replace(matches[i], ".");
 
 		}
-
+	}
 }
 
 function convertObjectPropertyCaller(){
 
 	var matches = AtomScript.CODE.match(/\b\<(.+?)\>/g);
 
-	if(matches != null)
+	if(matches != null){
 		for(var i = 0; i < matches.length; i++){
 
 			var match = matches[i];
@@ -174,14 +179,14 @@ function convertObjectPropertyCaller(){
 			AtomScript.CODE = AtomScript.CODE.replace(match, "." + propname);
 
 		}
-
+	}
 }
 
 function convertObjectPropertyNameCaller(){
 
 	var matches = AtomScript.CODE.match(/\b\<(.+?)\> \w+|\<(.+?)\>\w+/g);
 
-	if(matches != null)
+	if(matches != null){
 		for(var i = 0; i < matches.length; i++){
 
 			var match = matches[i];
@@ -191,7 +196,7 @@ function convertObjectPropertyNameCaller(){
 			AtomScript.CODE = AtomScript.CODE.replace(match, "." + propname + "." + other);
 
 		}
-
+	}
 }
 
 function convertColor(){
@@ -210,7 +215,7 @@ function includeFiles(){
 
 	var matches = AtomScript.CODE.match(/include[^;]+;/g);
 	
-	if(matches != null)
+	if(matches != null){
 	
 		for(var i = 0; i < matches.length; i++){
 			
@@ -255,7 +260,7 @@ function includeFiles(){
 			}
 		
 		}
-
+	}
 }
 
 function readFile(file){
